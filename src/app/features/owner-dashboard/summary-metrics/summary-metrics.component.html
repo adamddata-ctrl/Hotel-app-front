@@ -1,0 +1,40 @@
+<div class="metrics-widget">
+  
+  <!-- Interactive Date Filter Panel Configuration Bounds -->
+  <div class="filter-controls">
+    <label for="summary-date">📅 CHOOSE CALENDAR EVALUATION DATE:</label>
+    <input 
+      type="date" 
+      id="summary-date" 
+      [ngModel]="selectedDate" 
+      (ngModelChange)="onDateChange($event)" 
+    />
+     </div>
+
+  <!-- Loading State Presentation Placeholder Toggle -->
+  <div class="loading-state" *ngIf="isLoading">Re-calculating financial tracking ledgers...</div>
+
+  <!-- Error Alerts Container -->
+  <div class="error-banner" *ngIf="errorMessage && !isLoading">
+    ⚠️ {{ errorMessage }}
+  </div>
+
+  <!-- Main KPI Snapshot Balance Sheet Scorecard Block Grid Matrix Layout -->
+  <div class="scorecard-grid" *ngIf="summaryData && !isLoading">
+    
+    <!-- Revenue Intake Total Display Metric Card Component -->
+    <div class="kpi-card revenue-card">
+      <div class="kpi-label">TOTAL CONSOLIDATED DAILY REVENUE</div>
+      <div class="kpi-value">${{ summaryData.totalRevenue | number:'1.2-2' }}</div>
+      <div class="kpi-footer">Live Cash Register Balances</div>
+    </div>
+
+    <!-- Ticket Velocity Velocity Evaluation Tracker Component Card -->
+    <div class="kpi-card order-card">
+      <div class="kpi-label">AGGREGATE DAILY ORDER VELOCITY</div>
+      <div class="kpi-value">{{ summaryData.totalOrders }} Orders</div>
+      <div class="kpi-footer">Total Kitchen Routing Slips Processed</div>
+    </div>
+
+  </div>
+</div>

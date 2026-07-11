@@ -1,0 +1,61 @@
+<div class="analytics-widget">
+  <div class="widget-header">
+    <h3>📊 POPULAR MENU ITEMS SOLD (CONSOLIDATED VOLUMES)</h3>
+  </div>
+
+  <!-- Operational Monthly Selection Dropdowns Layout Control Filter Grid Matrix -->
+  <div class="filter-row">
+    <div class="input-group">
+      <label for="item-month-select">Choose Month:</label>
+      <select id="item-month-select" [(ngModel)]="currentMonth" (change)="loadMonthlyItemPopularityMetrics()">
+        <option [ngValue]="1">January</option>
+        <option [ngValue]="2">February</option>
+        <option [ngValue]="3">March</option>
+        <option [ngValue]="4">April</option>
+        <option [ngValue]="5">May</option>
+        <option [ngValue]="6">June</option>
+        <option [ngValue]="7">July</option>
+        <option [ngValue]="8">August</option>
+        <option [ngValue]="9">September</option>
+        <option [ngValue]="10">October</option>
+        <option [ngValue]="11">November</option>
+        <option [ngValue]="12">December</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="isLoading">Re-calculating product inventory sales volume tracking ledgers...</div>
+  <div class="error-banner" *ngIf="errorMessage && !isLoading">⚠️ {{ errorMessage }}</div>
+
+  <!-- Item Sales Table Matrix Layout Layout -->
+  <div class="table-responsive" *ngIf="itemData.length > 0 && !isLoading">
+    <table class="analytics-table">
+      <thead>
+        <tr>
+             <th>MENU ITEM DETAILS</th>
+          <th>CATEGORY</th>
+          <th>TOTAL QUANTITY SOLD</th>
+          <th>TOTAL REVENUE GENERATED</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of itemData; let i = index">
+          <td class="item-name-cell">
+            <span class="rank-badge">#{{ i + 1 }}</span> {{ row.itemName }}
+          </td>
+          <td>
+            <span class="category-tag" [class.food-tag]="row.category === 'FOOD'">
+              {{ row.category }}
+            </span>
+          </td>
+            <td class="qty-cell">{{ row.totalQuantitySold }} physical units</td>
+          <td class="revenue-cell">${{ row.totalRevenueGenerated | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="itemData.length === 0 && !isLoading && !errorMessage">
+    📭 Zero individual kitchen food or drink items routed for this selected calendar window.
+  </div>
+</div>

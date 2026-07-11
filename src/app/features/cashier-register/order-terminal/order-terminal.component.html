@@ -1,0 +1,87 @@
+<div class="terminal-container">
+  
+  <!-- Left Workspace Pane: Menu Categories and Product Quick-Tiles -->
+  <div class="menu-pane">
+    <div class="pane-header">
+      <button class="back-btn" routerLink="/register/waiters">⬅ CHANGE WAITER</button>
+      <div class="category-tabs">
+        <button [class.active]="activeCategory === 'ALL'" (click)="filterCatalog('ALL')">ALL ITEMS</button>
+        <button [class.active]="activeCategory === 'FOOD'" (click)="filterCatalog('FOOD')">🍔 FOOD</button>
+        <button [class.active]="activeCategory === 'DRINK'" (click)="filterCatalog('DRINK')">🥤 DRINKS</button>
+      </div>
+    </div>
+
+    <!-- Error Banner Context -->
+    <div class="error-banner" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+     <!-- Quick Tap Touchscreen Menu Grid Matrix -->
+    <div class="menu-grid">
+      <div class="menu-tile" *ngFor="let item of filteredItems" (click)="addToCart(item)">
+        <span class="item-name">{{ item.itemName }}</span>
+        <span class="item-price">${{ item.price | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Workspace Pane: Active Running Bill Summary -->
+  <div class="ticket-pane">
+    <div class="ticket-header">
+      <h3>ACTIVE ORDER TICKET</h3>
+      <div class="meta-row"><span>Waiter:</span> <strong>{{ selectedWaiterName }}</strong></div>
+      <div class="meta-row"><span>Cashier:</span> <span>{{ cashierName }}</span></div>
+    </div>
+
+     <!-- List item block container tracking rows -->
+    <div class="ticket-items">
+      <div class="empty-state" *ngIf="cart.length === 0">
+        🛒 Cart is empty. Tap menu items to begin.
+      </div>
+      <div class="ticket-row" *ngFor="let c of cart">
+        <div class="row-details">
+          <span class="qty-badge">{{ c.quantity }}x</span>
+          <span class="row-name">{{ c.itemName }}</span>
+        </div>
+        <span class="row-subtotal">${{ (c.quantity * c.unitPrice) | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Final calculated summary balance totals and execution triggers -->
+    <div class="ticket-footer">
+         <div class="total-row">
+        <span>TOTAL DUE:</span>
+        <span class="grand-total">${{ calculateTotal() | number:'1.2-2' }}</span>
+      </div>
+      <button class="print-btn" [disabled]="cart.length === 0" (click)="submitAndPrintTicket()">
+        🖨️ PRINT TICKET
+      </button>
+    </div>
+  </div>
+
+  <!-- DRIVER-FREE RECEIPT PRINT OUT BLOCK (Hidden from UI, visible only to printer) -->
+  <div id="receipt-print-area">
+    <div class="receipt-header">
+      <h2>HOTEL RESTAURANT</h2>
+      <p>KITCHEN ROUTING SLIP</p>
+      <p>--------------------------------</p>
+    </div>
+     <div class="receipt-meta">
+      <p>Date: Friday, Jul 10, 2026</p>
+      <p>Waiter: {{ selectedWaiterName }}</p>
+      <p>Cashier: {{ cashierName }}</p>
+      <p>--------------------------------</p>
+    </div>
+    <div class="receipt-body">
+      <div class="receipt-item-row" *ngFor="let rc of cart">
+        <span>{{ rc.quantity }}x {{ rc.itemName }}</span>
+        <span>${{ (rc.quantity * rc.unitPrice) | number:'1.2-2' }}</span>
+      </div>
+      <p>--------------------------------</p>
+    </div>
+    <div class="receipt-footer">
+      <h3>TOTAL: ${{ calculateTotal() | number:'1.2-2' }}</h3>
+      <p>SENT TO ROUTING QUEUE</p>
+    </div>
+     </div>
+
+</div>

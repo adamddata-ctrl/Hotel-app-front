@@ -1,0 +1,28 @@
+
+<div class="dashboard-shell-container">
+  
+  <!-- Master Management Top Navigation Header Bar Layout Panel -->
+  <div class="top-nav-navbar">
+    <div class="brand-logotype">
+      <span class="pulse-indicator">● LIVE</span>
+      <h2>HOTEL POS SAAS SYSTEM OWNER DASHBOARD</h2>
+    </div>
+    <div class="session-management-panel">
+      <span class="user-badge">🔒 Locked: {{ ownerEmail }}</span>
+      <button class="logout-action-btn" (click)="executeLogoutWorkflow()">LOGOUT SECURELY</button>
+    </div>
+  </div>
+
+  <!-- Primary Subcomponent Data Matrix Grid Grid Presentation Stream Workspace Container -->
+  <div class="dashboard-scrollable-workspace">
+     <!-- 1. Mount High-Level Financial KPI Snapshot Cards Widget (SummaryMetrics) -->
+    <app-summary-metrics></app-summary-metrics>
+
+    <!-- 2. Mount Tabular Monthly Staff Efficiency Breakdown Spreadsheet Matrix (WaiterReports) -->
+    <app-waiter-reports></app-waiter-reports>
+
+    <!-- 3. Mount Monthly Item Popularity Matrix Volume Tracking Aggregations Widget (ItemAnalytics) -->
+    <app-item-analytics></app-item-analytics>
+
+  </div>
+</div>

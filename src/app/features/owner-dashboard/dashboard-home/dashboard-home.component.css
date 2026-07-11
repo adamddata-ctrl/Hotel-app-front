@@ -1,0 +1,81 @@
+.dashboard-shell-container {
+  min-height: 100vh;
+  background-color: #1a202c; /* Uniform modern charcoal base theme coloring directly match */
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Master Top Navbar Configurations Settings */
+.top-nav-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d3748;
+  padding: 18px 40px;
+  border-bottom: 2px solid #4a5568;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.brand-logotype {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pulse-indicator {
+  color: #48bb78;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  animation: pulse 2s infinite ease-in-out;
+}
+.brand-logotype h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #edf2f7;
+}
+
+.session-management-panel {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-badge {
+  color: #a0aec0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.logout-action-btn {
+  background-color: transparent;
+  color: #e53e3e;
+  border: 2px solid #e53e3e;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logout-action-btn:hover {
+  background-color: #e53e3e;
+  color: #ffffff;
+}
+/* Scrollable Main Area Workspace Settings */
+.dashboard-scrollable-workspace {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

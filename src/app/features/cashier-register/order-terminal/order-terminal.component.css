@@ -1,0 +1,281 @@
+/* Split Pane Master Framework Layout Setup */
+.terminal-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #1a202c;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Left Pane Configuration: Menu Tapping Space */
+.menu-pane {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a202c;
+  border-right: 2px solid #2d3748;
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #2d3748;
+}
+
+.back-btn {
+  background-color: #4a5568;
+  color: #ffffff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 12px;
+}
+
+.category-tabs button {
+  background-color: #4a5568;
+  color: #cbd5e0;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.category-tabs button.active {
+  background-color: #3182ce;
+  color: #ffffff;
+  }
+
+.menu-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.menu-tile {
+  background-color: #2d3748;
+  border: 2px solid #4a5568;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  min-height: 100px;
+}
+
+.menu-tile:active {
+  background-color: #2b6cb0;
+  border-color: #3182ce;
+}
+
+.item-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.item-price {
+  color: #63b3ed;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Right Pane Configuration: Active Order Sheet */
+.ticket-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #2d3748;
+  max-width: 420px;
+}
+
+.ticket-header {
+  padding: 24px;
+  background-color: #1a202c;
+  border-bottom: 2px solid #2d3748;
+}
+
+.ticket-header h3 {
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  color: #a0aec0;
+  font-size: 14px;
+   margin-bottom: 4px;
+}
+
+.meta-row strong {
+  color: #63b3ed;
+}
+
+.ticket-items {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.empty-state {
+  color: #a0aec0;
+  text-align: center;
+  padding-top: 40px;
+   font-size: 15px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #4a5568;
+  color: #ffffff;
+}
+
+.row-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.qty-badge {
+  background-color: #4a5568;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #63b3ed;
+}
+
+.row-name {
+  font-weight: 500;
+}
+
+.ticket-footer {
+  padding: 24px;
+  background-color: #1a202c;
+  border-top: 2px solid #2d3748;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.grand-total {
+  color: #48bb78;
+  font-size: 22px;
+}
+
+.print-btn {
+  width: 100%;
+   background-color: #48bb78;
+  color: #ffffff;
+  border: none;
+  padding: 18px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.print-btn:disabled {
+  background-color: #4a5568;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-banner { 
+     background-color: #fed7d7;
+  color: #c53030;
+  padding: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* UI Hiding Configurations for Print Container */
+#receipt-print-area {
+  display: none;
+}
+
+/* ========================================================================= */
+/* CRITICAL MULTI-TENANT SAAS HARDWARE DRIVER-FREE PRINTER ENGINE CODES      */
+/* ========================================================================= */
+@media print { 
+    /* 1. Hide the entire application graphical workspace panels from printer */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* 2. Unhide and project the thermal ticket container exclusively */
+  #receipt-print-area, #receipt-print-area * {
+    visibility: visible;
+  }
+  
+  #receipt-print-area {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm; /* 
+    color: #000000;
+    background-color: #ffffff;
+    font-family: 'Courier New', Courier, monospace; /* Guarantee uniform mono text alignments */
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .receipt-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  .receipt-header p {
+    margin: 4px 0;
+  }
+
+  .receipt-meta p {
+    margin: 4px 0;
+  }
+
+  .receipt-item-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+  }
+
+  .receipt-footer {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+   .receipt-footer h3 {
+    margin: 10px 0 4px 0;
+    font-size: 16px;
+  }
+}

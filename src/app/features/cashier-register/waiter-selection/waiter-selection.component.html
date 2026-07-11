@@ -1,0 +1,55 @@
+<div class="selection-container">
+  <!-- Top Navigation Utility Header Bar -->
+  <div class="header-bar">
+    <div class="cashier-info">
+      <span>CASHIER REGISTRATION DESK</span>
+    </div>
+    <div class="date-info">
+      <span>📅 POS WORKSTATION MONITOR</span>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h2>WHO IS ORDERING FOR THIS TABLE?</h2>
+
+    <!-- Error Messaging Notification Context Banner -->
+    <div class="error-banner" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+     <!-- Responsive Multi-Tenant Large Card Grid System Layout -->
+    <div class="waiter-grid">
+      <!-- Dynamic Loop Rendering Active Waiters from MySQL Database -->
+      <div class="waiter-card" *ngFor="let waiter of waitersList" (click)="selectWaiter(waiter)">
+        <div class="avatar-circle">
+          {{ waiter.waiterName.charAt(0).toUpperCase() }}
+        </div>
+        <h3>{{ waiter.waiterName }}</h3>
+        <span class="staff-id">Staff ID: #00{{ waiter.id }}</span>
+      </div>
+
+      <!-- Static Quick Action Trigger Card to Onboard Staff on the Fly -->
+      <div class="waiter-card add-card" (click)="toggleAddModal()">
+        <div class="avatar-circle add-circle">+</div>
+        <h3>ADD WAITER</h3>
+        <span class="staff-id">Quick Shortcut</span>
+      </div>
+    </div>
+     </div>
+
+  <!-- Hidden Quick-Add Overlay Shortcut Modal Container -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-card">
+      <h3>Onboard New Service Waiter</h3>
+      <p>Input staff legal operating profile name details:</p>
+      
+      <input type="text" [(ngModel)]="newWaiterName" placeholder="e.g., Alex, Sarah, John" />
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="toggleAddModal()">CANCEL</button>
+        <button class="confirm-btn" [disabled]="!newWaiterName.trim()" (click)="submitNewWaiter()">
+          CONFIRM ADD
+        </button>
+      </div>
+    </div>
+     </div>
+</div>

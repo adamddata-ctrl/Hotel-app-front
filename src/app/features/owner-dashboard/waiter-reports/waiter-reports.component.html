@@ -1,0 +1,58 @@
+
+<div class="reports-widget">
+  <div class="widget-header">
+    <h3>📈 MONTHLY STAFF EFFICIENCY BREAKDOWNS</h3>
+    
+    <!-- Action trigger execution button maps straight to CSV export algorithms -->
+    <button class="export-btn" [disabled]="waiterData.length === 0" (click)="exportReportToCSV()">
+      📥 DOWNLOAD EXCEL FILE
+    </button>
+  </div>
+
+  <!-- Operational Monthly Selection Dropdowns Layout Control Filter Grid Matrix -->
+  <div class="filter-row">
+    <div class="input-group">
+      <label for="month-select">Choose Month:</label>
+      <select id="month-select" [(ngModel)]="currentMonth" (change)="loadMonthlyWaiterPerformanceData()">
+        <option [ngValue]="1">January</option>
+        <option [ngValue]="2">February</option>
+        <option [ngValue]="3">March</option>
+         <option [ngValue]="4">April</option>
+        <option [ngValue]="5">May</option>
+        <option [ngValue]="6">June</option>
+        <option [ngValue]="7">July</option>
+        <option [ngValue]="8">August</option>
+        <option [ngValue]="9">September</option>
+        <option [ngValue]="10">October</option>
+        <option [ngValue]="11">November</option>
+        <option [ngValue]="12">December</option>
+      </select>
+    </div>
+  </div>
+<div class="loading-state" *ngIf="isLoading">Re-aggregating waiter order logs...</div>
+  <div class="error-banner" *ngIf="errorMessage && !isLoading">⚠️ {{ errorMessage }}</div>
+
+  <!-- Clean, Highly Structured Enterprise Analytical Table Data Matrix Layout Layout -->
+  <div class="table-responsive" *ngIf="waiterData.length > 0 && !isLoading">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>WAITER LEGAL NAME</th>
+          <th>TOTAL ORDERS PROCESSED</th>
+          <th>TOTAL SALES VOLUMES GENERATED</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of waiterData">
+          <td class="staff-name-cell">👤 {{ row.waiterName }}</td>
+           <td>{{ row.totalOrders }} orders executed</td>
+          <td class="revenue-cell">${{ row.totalRevenue | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="waiterData.length === 0 && !isLoading && !errorMessage">
+    📭 Zero active restaurant checkout orders tracked for this selected calendar window.
+  </div>
+</div>

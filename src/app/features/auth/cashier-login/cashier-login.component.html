@@ -1,0 +1,37 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>HOTEL RESTAURANT POS</h2>
+    <p class="subtitle">ENTER CASHIER PIN</p>
+
+    <!-- Visual Code Dot Matrix Trackers -->
+    <div class="pin-display-dots">
+      <span class="dot" [class.filled]="pinBuffer.length >= 1"></span>
+      <span class="dot" [class.filled]="pinBuffer.length >= 2"></span>
+      <span class="dot" [class.filled]="pinBuffer.length >= 3"></span>
+      <span class="dot" [class.filled]="pinBuffer.length >= 4"></span>
+    </div>
+
+    <!-- Error Messaging Notification Context -->
+    <div class="error-banner" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+     <!-- 0-9 Screen Numeric Touch Matrix Grid Panel -->
+    <div class="pin-pad-grid">
+      <button (click)="handleNumberInput('1')">1</button>
+      <button (click)="handleNumberInput('2')">2</button>
+      <button (click)="handleNumberInput('3')">3</button>
+      
+      <button (click)="handleNumberInput('4')">4</button>
+      <button (click)="handleNumberInput('5')">5</button>
+      <button (click)="handleNumberInput('6')">6</button>
+      
+      <button (click)="handleNumberInput('7')">7</button>
+      <button (click)="handleNumberInput('8')">8</button>
+      <button (click)="handleNumberInput('9')">9</button>
+      
+      <button class="clear-btn" (click)="handleClear()">CLEAR</button>
+      <button (click)="handleNumberInput('0')">0</button>
+      <button class="disabled-btn" disabled></button>
+       </div>
+  </div>
+</div>
