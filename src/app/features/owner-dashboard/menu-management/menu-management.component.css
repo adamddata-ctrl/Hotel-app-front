@@ -1,0 +1,205 @@
+/* ==========================================================================
+   📦 MULTI-TENANT INVENTORY MANAGEMENT INTERFACE COMPONENT STYLES
+   ========================================================================== */
+
+/* 1. Primary Container Component Row Flex Matrix */
+.inventory-widget-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background-color: #11111b; /* Outer frame dark backdrop slate */
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+}
+/* Responsive grid splitting break point rule definition layout */
+@media (min-width: 992px) {
+  .inventory-widget-container {
+    flex-direction: row;
+    align-items: start;
+  }
+  
+  .inventory-form-card {
+    width: 35% !important; /* Compact sidebar profile layout dimensions */
+    position: sticky;
+    top: 24px;
+  }
+  
+  .inventory-list-card {
+    width: 65% !important; /* Generous table list viewport allocation bounds */
+  }
+}
+/* 2. Unified Content Component Structure Framework Panels */
+.inventory-form-card, .inventory-list-card {
+  background-color: #1e1e2e; /* Workspace card charcoal base background */
+  border: 1px solid #313244;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.inventory-form-card h3, .inventory-list-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #cdd6f4;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #313244;
+  padding-bottom: 12px;
+  }
+
+/* 3. Form Input Field Control Architectures */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #a6adc8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.input-group input, .input-group select {
+  background-color: #313244;
+  border: 1px solid #45475a;
+  border-radius: 6px;
+  color: #cdd6f4;
+  padding: 10px 14px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  width: 100%;
+}
+.input-group input:focus, .input-group select:focus {
+  border-color: #89b4fa; /* Primary color highlight tracking accent tint */
+}
+
+/* 4. Action Commit Registration Buttons Grid Configurations */
+.add-item-btn {
+  background-color: #89b4fa; /* Primary brand accent color profile context */
+  color: #11111b;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+   transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.add-item-btn:hover {
+  background-color: #b4befe;
+  transform: translateY(-1px);
+}
+
+/* 5. Spreadsheet List Datatable Subsystem Grid Framework */
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.inventory-table th {  background-color: #11111b;
+  color: #bac2de;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  border-bottom: 2px solid #313244;
+}
+
+.inventory-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #313244;
+  color: #cdd6f4;
+}
+
+.inventory-table tbody tr:hover {  background-color: #2f2f45; /* Soft matrix line row selection tracking trace */
+}
+
+/* 🏷️ 6. Classification Custom Status Tags Badges */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: rgba(137, 180, 250, 0.15);
+  color: #89b4fa;
+  border: 1px solid rgba(137, 180, 250, 0.3);
+}
+
+.badge.food { background-color: rgba(249, 226, 175, 0.15);
+  color: #f9e2af;
+  border: 1px solid rgba(249, 226, 175, 0.3);
+}
+
+/* 7. System Warning Notification Banners Presenters */
+.error-banner, .loading-state, .empty-state {
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.error-banner { background-color: #3b242e; color: #f38ba8; border-left: 4px solid #f38ba8; }
+.loading-state { background-color: #252538; color: #f9e2af; border-left: 4px solid #f9e2af; }
+.empty-state { background-color: #252538; color: #a6adc8; border: 1px dashed #45475a; text-align: center; }
+
+/* Global structural alignment layout text decorators */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 600; }
+.text-green { color: #a6e3a1; }
+
+/* ==========================================================================
+   📦 ADAPTIVE GRID SPLIT INTEGRATION (APPENDED TO LINE 170)
+   ========================================================================== */
+
+/* Automatically arranges your creation form card and stock roster tables side-by-side on wide screens */
+@media (min-width: 992px) {
+  .inventory-widget-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .inventory-form-card {
+    width: 35% !important;
+    position: sticky;
+    top: 24px;
+    box-sizing: border-box;
+     }
+  
+  .inventory-list-card {
+    width: 65% !important;
+    box-sizing: border-box;
+  }
+}
+
+/* Fallback card content spacing constraints */
+.inventory-form-card, .inventory-list-card {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #2f2f45; /* Interactive hover row trace selection line highlighting */
+  transition: background-color 0.15s ease;
+}

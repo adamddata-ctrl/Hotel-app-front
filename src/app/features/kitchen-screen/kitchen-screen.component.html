@@ -1,0 +1,66 @@
+<div class="kds-dashboard-canvas">
+
+  <!-- 🍳 Top Banner Hub Tracking Operational Status Metrics -->
+  <header class="kds-header">
+    <div class="kds-branding">
+      <h2>🍳 KITCHEN DISPLAY SYSTEM (KDS)</h2>
+      <p>Real-time order routing queue & meal preparation ledger</p>
+    </div>
+    
+    <div class="kds-status-badge">
+      <span class="pulse-indicator"></span>
+      LIVE CONNECTION ACTIVE
+    </div>
+  </header>
+
+  <!-- 🚨 Dynamic System Alert Presentation Containers -->
+  <div class="kds-error-alert" *ngIf="errorMessage">
+    ⚠️ {{ errorMessage }}
+     </div>
+
+  <div class="kds-loading-shimmer" *ngIf="isLoading && openOrders.length === 0">
+    Synchronizing kitchen queues with central routing servers...
+  </div>
+
+  <!-- 📭 Empty State Fallback Panel Placeholder -->
+  <div class="kds-empty-state" *ngIf="!isLoading && openOrders.length === 0">
+    🎉 ALL ORDERS CLEAR! No active tickets in the kitchen routing queue.
+  </div>
+
+  <!-- 📋 Live Production Ticket Cards Matrix Layout -->
+  <div class="kds-cards-grid" *ngIf="openOrders.length > 0">
+    
+    <!-- Loop dynamically through active orders array streams -->
+      <div class="kds-ticket-card" *ngFor="let order of openOrders; let idx = index">
+      
+      <!-- Card Header Panel -->
+      <div class="ticket-card-header">
+        <div class="ticket-meta">
+          <span class="ticket-number">TICKET #{{ order.id }}</span>
+          <span class="ticket-time">⏱️ {{ order.orderTime }}</span>
+        </div>
+        <div class="waiter-badge">🤵 {{ order.waiterName }}</div>
+      </div>
+
+      <!-- Scrollable Food Item Roster Box -->
+      <div class="ticket-card-body">
+        <ul class="food-items-list">
+          <li *ngFor="let item of order.items">
+            <span class="food-qty">{{ item.quantity }}x</span>
+            <span class="food-description">{{ item.itemName }}</span>
+          </li>
+           </ul>
+      </div>
+
+      <!-- Card Action Completion Pin Trigger Footer Button -->
+      <div class="ticket-card-footer">
+        <button class="serve-complete-btn" (click)="fulfillOrderTicket(order.id)">
+          ✅ MARK COOKED & SERVE
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

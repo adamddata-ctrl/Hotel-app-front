@@ -1,0 +1,204 @@
+/* ==========================================================================
+   🍳 REAL-TIME KITCHEN DISPLAY SYSTEM (KDS) DESIGN STYLESHEET ENGINE
+   ========================================================================== */
+
+/* 1. Core Canvas Outer Frame Envelope */
+.kds-dashboard-canvas {
+  min-height: 100vh;
+  background-color: #0f0f15; /* Absolute deep obsidian workspace black */
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+}
+
+/* 2. Top Banner Branding Action Strip Alignment Row */
+.kds-header {
+  display: flex;
+   justify-content: space-between;
+  align-items: center;
+  background-color: #161622;
+  border: 1px solid #2d2d3f;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.kds-branding h2 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 4px 0;
+  color: #f9e2af; /* Neon warm amber highlight accent typography */
+}
+.kds-branding p {
+  font-size: 13px;
+  color: #a6adc8;
+  margin: 0;
+}
+
+/* 🟢 Live Telemetry Connection Pulse Status Indicator Badge Node */
+.kds-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(166, 227, 161, 0.1);
+  border: 1px solid rgba(166, 227, 161, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a6e3a1;
+   letter-spacing: 0.5px;
+}
+
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #a6e3a1;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(166, 227, 161, 0.7);
+  animation: telemetryPulse 1.8s infinite;
+}
+
+@keyframes telemetryPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(166, 227, 161, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(166, 227, 161, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(166, 227, 161, 0); }
+}
+/* 3. Primary Production Ticket Matrix Grid Split Layout Bounds */
+.kds-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+/* 📋 4. Master High-Contrast Order Slip Card Block Component */
+.kds-ticket-card {
+  background-color: #1e1e2e;
+  border: 2px solid #313244;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+   flex-direction: column;
+}
+
+.ticket-card-header {
+  background-color: #11111b;
+  padding: 16px;
+  border-bottom: 2px solid #313244;
+}
+
+.ticket-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ticket-number {
+  font-size: 18px;
+   font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #89b4fa; /* Electric blue high visibility identification string text */
+}
+
+.ticket-time {
+  font-size: 13px;
+  color: #f38ba8;
+  font-weight: 600;
+}
+
+.waiter-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #bac2de;
+}
+/* 5. Scrollable Ticket Body & Large-Sized Menu Item Row Iterators */
+.ticket-card-body {
+  padding: 20px;
+  min-height: 180px;
+  max-height: 320px;
+  overflow-y: auto;
+  background-color: #1e1e2e;
+}
+
+.food-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.food-items-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 18px; /* Oversized metrics to counter kitchen line reading glare */
+  font-weight: 700;
+  border-bottom: 1px dashed #313244;
+  padding-bottom: 10px;
+}
+
+.food-qty {
+  color: #f9e2af;
+  background-color: rgba(249, 226, 175, 0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+  min-width: 28px;
+  text-align: center;
+  }
+
+.food-description {
+  color: #cdd6f4;
+}
+
+/* 6. Execution Clearance Action Footer Button Module */
+.ticket-card-footer {
+  padding: 14px;
+  background-color: #11111b;
+  border-top: 1px solid #313244;
+}
+
+.serve-complete-btn {
+  background-color: #a6e3a1; /* Success fulfillment green primary push button */
+  color: #11111b;
+  border: none;
+   border-radius: 6px;
+  padding: 14px 20px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.serve-complete-btn:hover {
+  background-color: #94e2d5;
+  transform: scale(1.02);
+}
+
+/* 7. Notification Status Message Containers */
+.kds-error-alert, .kds-loading-shimmer, .kds-empty-state {
+    padding: 16px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.kds-error-alert { background-color: #3b242e; color: #f38ba8; border: 1px solid #f38ba8; }
+.kds-loading-shimmer { background-color: #161622; color: #f9e2af; border: 1px dashed #f9e2af; }
+.kds-empty-state {
+  background-color: #161622;
+  color: #a6e3a1;
+  border: 2px dashed #313244;
+  text-align: center;
+  padding: 60px 40px;
+  font-size: 18px;
+}

@@ -1,27 +1,79 @@
 
+
+<!-- 📊 SHORTCUT BANNER: CONNECTS MANAGER TO DEDICATED SALES CHART PAGE [3.1] -->
+<div class="chart-link-banner" style="background-color: #1e1e2e; border: 1px solid #313244; border-radius: 8px; padding: 16px 20px; margin: 0 0 24px 0; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+  <div>
+    <h4 style="color: #cba6f7; margin: 0 0 4px 0; font-size: 15px; font-weight: 700; letter-spacing: 0.5px;">📈 COMPREHENSIVE DAILY SALES CHARTS</h4>
+    <p style="color: #a6adc8; margin: 0; font-size: 12px;">Review detailed day-by-day business calendar bars compiled chronologically across all 12 operational months [3.1].</p>
+  </div>
+  <button routerLink="/dashboard/sales-charts" 
+          style="background-color: #cba6f7; color: #11111b; font-weight: 700; border: none; border-radius: 6px; padding: 10px 18px; font-size: 12px; cursor: pointer; transition: transform 0.15s ease;"
+          onmouseover="this.style.transform='scale(1.03)'; this.style.filter='brightness(1.1)';"
+          onmouseout="this.style.transform='none'; this.style.filter='none';">
+    📊 VIEW ANNUAL CHARTS
+  </button>
+</div>
+
+
+
+
+
 <div class="dashboard-shell-container">
   
-  <!-- Master Management Top Navigation Header Bar Layout Panel -->
+  <!-- ✨ Master Management Top Navigation Header Bar Layout Panel -->
   <div class="top-nav-navbar">
     <div class="brand-logotype">
       <span class="pulse-indicator">● LIVE</span>
       <h2>HOTEL POS SAAS SYSTEM OWNER DASHBOARD</h2>
     </div>
+    
+   
+   <!-- 🚨 REAL-TIME LOW STOCK SUPPLY WARNING ALERT BANNER CARD -->
+    <div class="kds-alert-summary-widget" style="margin: 12px 0 20px 0; padding: 14px 18px; background-color: rgba(243, 139, 168, 0.05); border: 1px solid #f38ba8; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(243, 139, 168, 0.04);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 18px;">⚠️</span>
+        <div>
+          <h4 style="margin: 0 0 2px 0; color: #f38ba8; font-size: 13px; font-weight: 700; letter-spacing: 0.5px;">SUPPLY WARNING ALERT</h4>
+          <p style="margin: 0; color: #a6adc8; font-size: 12px; font-weight: 500;">Critical ingredient thresholds breached on floor inventory matrices.</p>
+        </div>
+      </div>
+    
+          <!-- Interactive Screen Transition Link Button -->
+      <button routerLink="/dashboard/inventory-management" style="background-color: rgba(243, 139, 168, 0.15); color: #f38ba8; border: 1px solid #f38ba8; border-radius: 4px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s ease;" onmouseover="this.style.backgroundColor='#f38ba8'; this.style.color='#11111b'" onmouseout="this.style.backgroundColor='rgba(243, 139, 168, 0.15)'; this.style.color='#f38ba8'">
+        🔍 DISPATCH STOCKTAKE
+      </button>
+    </div>
+
+   
     <div class="session-management-panel">
       <span class="user-badge">🔒 Locked: {{ ownerEmail }}</span>
-      <button class="logout-action-btn" (click)="executeLogoutWorkflow()">LOGOUT SECURELY</button>
+
+      <!-- Seamless, secure router-link shortcut button to your product inventory panel forms -->
+       <button class="logout-action-btn inventory-btn" routerLink="/dashboard/inventory-management" style="background-color: #cba6f7; color: #11111b; font-weight: 700; border: none; border-radius: 4px; padding: 6px 12px; font-size: 12px; cursor: pointer; margin-right: 8px;">
+          📦 MANAGE INVENTORY
+        </button>
+
+
+
+        
+       <!-- Your excellent original secure session handover lockout action button trigger -->
+      <button class="logout-action-btn" (click)="executeLogoutWorkflow()">
+        LOGOUT SECURELY
+      </button>
     </div>
   </div>
 
-  <!-- Primary Subcomponent Data Matrix Grid Grid Presentation Stream Workspace Container -->
+  <!-- 📊 Primary Subcomponent Data Matrix Grid Presentation Stream Workspace Container -->
   <div class="dashboard-scrollable-workspace">
-     <!-- 1. Mount High-Level Financial KPI Snapshot Cards Widget (SummaryMetrics) -->
-    <app-summary-metrics></app-summary-metrics>
+    
+    <!-- <!-- 1. Mount High-Level Financial KPI Snapshot Cards Widget (SummaryMetrics) --> -->
+    <!-- 🔥 FIXED: We bind your live backend grossRevenue variable straight to the metrics widget -->
+    <app-summary-metrics [totalRevenue]="grossRevenue"></app-summary-metrics>
 
-    <!-- 2. Mount Tabular Monthly Staff Efficiency Breakdown Spreadsheet Matrix (WaiterReports) -->
+    <!-- <!-- 2. Mount Tabular Monthly Staff Efficiency Breakdown Spreadsheet Matrix (WaiterReports) --> -->
     <app-waiter-reports></app-waiter-reports>
 
-    <!-- 3. Mount Monthly Item Popularity Matrix Volume Tracking Aggregations Widget (ItemAnalytics) -->
+     <!-- <!-- 3. Mount Monthly Item Popularity Matrix Volume Tracking Aggregations Widget (ItemAnalytics) --> -->
     <app-item-analytics></app-item-analytics>
 
   </div>

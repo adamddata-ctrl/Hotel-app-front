@@ -1,0 +1,98 @@
+<div class="inventory-widget-container">
+  
+  <!-- ➕ 1. Form Submission Wrapper Container Card -->
+  <div class="inventory-form-card">
+    <h3>ADD NEW MENU ITEM</h3>
+    <div class="error-banner" *ngIf="errorMessage">⚠️ {{ errorMessage }}</div>
+    
+    <div class="form-grid">
+      <!-- Input Group 1: Item Label -->
+      <div class="input-group">
+        <label for="itemName">Product Name Description</label>
+        <input
+          type="text"
+          id="itemName"
+          [(ngModel)]="newItemName"
+          placeholder="e.g. Buffalo Chicken Wings"
+        />
+      </div>
+       <!-- Input Group 2: Categorization Dropdown Selector -->
+      <div class="input-group">
+        <label for="itemCategory">Menu Classification Category</label>
+        <select id="itemCategory" [(ngModel)]="newItemCategory">
+          <option value="FOOD">🍔 FOOD ITEMS</option>
+          <option value="DRINK">🍹 DRINK SELECTIONS</option>
+        </select>
+      </div>
+
+      <!-- Input Group 3: Financial Price Token -->
+      <div class="input-group">
+        <label for="itemPrice">Product Base Price ($)</label>
+        <input
+          type="number"
+          id="itemPrice"
+          [(ngModel)]="newItemPrice"
+          placeholder="0.00"
+          step="0.01"
+           />
+      </div>
+    </div>
+
+    <!-- Interactive Execution Trigger Form Button -->
+    <button class="add-item-btn" (click)="submitNewItem()">
+      ➕ COMMIT PRODUCT REGISTRY
+    </button>
+  </div>
+
+  <!-- 📊 2. Real-Time Live Inventory Management List Table Grid Matrix -->
+  <div class="inventory-list-card">
+    <h3>ACTIVE SYSTEM WORKSPACE PRODUCT ROSTERS</h3>
+
+    <!-- Shimmer Status Handler -->
+    <div class="loading-state" *ngIf="isLoading">
+      Re-indexing active warehouse catalogs... Please wait.
+       </div>
+
+    <!-- Relational Framework Catalog Table Display Layout -->
+    <table class="inventory-table" *ngIf="!isLoading && menuItems.length > 0">
+      <thead>
+        <tr>
+          <th>Product Name Description</th>
+          <th class="text-center">Classification Category</th>
+          <th class="text-right">Unit Price Marker</th>
+          <th class="text-center" style="color: #f38ba8;">System Actions</th> <!-- 🔥 FIXED: Appended Actions Header Row -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop dynamically through available menu database item arrays -->
+        <tr *ngFor="let item of menuItems">
+          <td class="font-bold">{{ item.itemName }}</td>
+          <td class="text-center">
+             <span class="badge" [class.food]="item.category === 'FOOD'">
+              {{ item.category === 'FOOD' ? '🍔 FOOD' : '🍹 DRINK' }}
+            </span>
+          </td>
+          <td class="text-right text-green font-bold">
+            ${{ item.price | number:'1.2-2' }}
+          </td>
+          <td class="text-center"> <!-- 🔥 FIXED: Added Safe, Owner-Only inline deletion button trigger channel -->
+            <button 
+              *ngIf="item.id"
+              (click)="removeItemFromInventory(item.id)" 
+              style="background-color: transparent; border: 1px solid #f38ba8; color: #f38ba8; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.backgroundColor='#f38ba8'; this.style.color='#11111b'"
+              onmouseout="this.style.backgroundColor='transparent'; this.style.color='#f38ba8'">
+              🗑️ PURGE ITEM
+            </button>
+          </td>
+            </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty Table Content Fallback Panel Placeholder -->
+    <div class="empty-state" *ngIf="!isLoading && menuItems.length === 0">
+      📭 No active menu configurations registered under this workspace profile.
+    </div>
+  </div>
+
+</div>

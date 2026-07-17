@@ -1,0 +1,301 @@
+/* ==========================================================================
+   📦 ADVANCED INVENTORY MANAGEMENT HUB SKIN (DEEP Slate PALETTE)
+   ========================================================================== */
+
+/* Full layout widget container spacing bounds */
+.warehouse-widget-container {
+  padding: 24px;
+  background-color: #1e1e2e; /* Sleek workspace dark slate */
+  border-radius: 14px;
+  border: 1px solid #313244;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #cdd6f4;
+}
+/* Master KDS Top Status Tracking Command Bar Layout Header */
+.warehouse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #313244;
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.title-block h2 {
+  color: #cba6f7; /* Vibrant luxury violet branding marker accent */
+  font-size: 22px;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+}
+.title-block p {
+  color: #a6adc8;
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Re-sync inventory layout click trigger button rules */
+.sync-matrix-btn {
+  background-color: transparent;
+  border: 1px solid #cba6f7;
+  color: #cba6f7;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+   transition: all 0.2s ease;
+}
+
+.sync-matrix-btn:hover {
+  background-color: #cba6f7;
+  color: #11111b;
+  transform: translateY(-1px);
+}
+
+/* Validation error display warning tracking ribbons */
+.error-banner {
+  background-color: rgba(243, 139, 168, 0.1);
+  border: 1px solid #f38ba8;
+  color: #f38ba8;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+   font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  font-style: italic;
+  color: #f9e2af;
+}
+
+/* 📊 Modern Spreadsheet Data Table Layout Design Rules */
+.spreadsheet-list-card {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #313244;
+}
+.inventory-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.inventory-data-table th {
+  background-color: #252538;
+  color: #a6adc8;
+  padding: 14px 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 11px;
+  border-bottom: 2px solid #313244;
+}
+.inventory-data-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #313244;
+  vertical-align: middle;
+}
+
+/* High-priority context highlight indicators for zero stock bounds */
+.low-stock-row {
+  background-color: rgba(243, 139, 168, 0.03);
+}
+
+.low-stock-row:hover {
+  background-color: rgba(243, 139, 168, 0.06) !important;
+}
+
+.inventory-data-table tbody tr:hover { 
+    background-color: #252538;
+}
+
+/* Tiny indicator labels for stock variances */
+.alert-tag {
+  background-color: rgba(243, 139, 168, 0.15);
+  color: #f38ba8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 8px;
+  border: 1px solid #f38ba8;
+}
+.unit-badge {
+  background-color: #313244;
+  color: #cdd6f4;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Utility cell column formatting tokens */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 600; }
+.text-green { color: #a6e3a1; }
+.text-red { color: #f38ba8; }
+.text-gray { color: #949cbb; }
+
+/* 🎛️ Touchscreen Quick Action Utility Buttons Layout Rows */
+.actions-cell {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.opt-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  }
+
+.btn-receive {
+  background-color: rgba(166, 227, 161, 0.1);
+  color: #a6e3a1;
+  border: 1px solid rgba(166, 227, 161, 0.3);
+}
+.btn-receive:hover { background-color: #a6e3a1; color: #11111b; }
+
+.btn-adjust {
+  background-color: rgba(249, 226, 175, 0.1);
+  color: #f9e2af;
+  border: 1px solid rgba(249, 226, 175, 0.3);
+}
+.btn-adjust:hover { background-color: #f9e2af; color: #11111b; }
+
+.btn-count { 
+     background-color: rgba(137, 180, 250, 0.1);
+  color: #89b4fa;
+  border: 1px solid rgba(137, 180, 250, 0.3);
+}
+.btn-count:hover { background-color: #89b4fa; color: #11111b; }
+
+/* 🪟 Interactive Blur Backed Overlay Modal Card Form Sheet Containers */
+.modal-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(17, 17, 27, 0.7);
+  backdrop-filter: blur(4px); /* Implements clean glassmorphism styling overlays */
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+   z-index: 999;
+}
+
+.action-modal-card {
+  background-color: #1e1e2e;
+  border: 1px solid #45475a;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.modal-title-row {
+  background-color: #252538;
+  padding: 16px 20px;
+  border-bottom: 1px solid #313244;
+  display: flex;
+   justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title-row h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #cba6f7;
+}
+
+.close-x-btn {
+  background: none;
+  border: none;
+  color: #a6adc8;
+  font-size: 22px;
+  cursor: pointer;
+  }
+.close-x-btn:hover { color: #f38ba8; }
+
+.modal-body-content {
+  padding: 20px;
+}
+
+.target-item-info {
+  font-size: 13px;
+  color: #a6adc8;
+  margin: 0 0 16px 0;
+}
+
+.modal-input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cdd6f4;
+   margin-bottom: 8px;
+}
+
+.modal-input-group input {
+  width: 100%;
+  background-color: #11111b;
+  border: 1px solid #313244;
+  border-radius: 8px;
+  padding: 10px;
+  color: #cdd6f4;
+  font-size: 16px;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+.modal-input-group input:focus {
+  border-color: #cba6f7;
+  outline: none;
+}
+/* Execution validation control buttons row footer */
+.modal-footer-row {
+  padding: 14px 20px;
+  background-color: #252538;
+  border-top: 1px solid #313244;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-btn-cancel {
+  background-color: transparent;
+  border: 1px solid #45475a;
+  color: #a6adc8;
+  padding: 8px 16px;
+  border-radius: 6px;
+   font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.modal-btn-cancel:hover { background-color: #313244; color: #cdd6f4; }
+
+.modal-btn-commit {
+  background-color: #cba6f7;
+  border: none;
+  color: #11111b;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.modal-btn-commit:hover { background-color: #b4befe; }

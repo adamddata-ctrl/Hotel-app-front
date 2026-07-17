@@ -1,0 +1,49 @@
+<div class="sales-chart-shell" style="padding: 24px; background-color: #11111b; min-height: 100vh;">
+  
+  <!-- Header Description Card -->
+  <div style="margin-bottom: 26px; border-bottom: 1px solid #313244; padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 style="color: #cdd6f4; margin: 0 0 6px 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px;">ANNUAL DAILY REVENUE ANALYTICS GRID</h2>
+      <p style="color: #a6adc8; margin: 0; font-size: 13px;">Comprehensive day-by-day revenue summary bars sorted dynamically by individual calendar blocks.</p>
+    </div>
+    <button routerLink="/dashboard/home" style="background-color: rgba(166, 227, 161, 0.12); color: #a6e3a1; border: 1px solid #a6e3a1; border-radius: 6px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer;">
+      🏠 HOME VIEW
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" style="color: #f9e2af; font-size: 14px; font-weight: 600;">
+    ⏳ Compiling system transactions into graphical grids...
+  </div>
+  <!-- Main Grid Iterator Row Container Loops -->
+  <div *ngIf="!isLoading" style="display: flex; flex-direction: column; gap: 32px;">
+    <div class="month-chart-box" *ngFor="let chart of monthlyCharts" style="background-color: #1e1e2e; border: 1px solid #313244; border-radius: 8px; padding: 20px;">
+      
+      <h3 style="color: #cba6f7; margin: 0 0 20px 0; font-size: 15px; font-weight: 700; border-left: 3px solid #cba6f7; padding-left: 10px;">
+        {{ chart.monthName.toUpperCase() }} DAILY SALES
+      </h3>
+
+      <!-- Scrollable Canvas Grid row displaying up to 31 individual day columns -->
+      <div class="bars-scroll-row" style="display: flex; align-items: flex-end; height: 160px; border-bottom: 2px solid #45475a; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+        <div *ngFor="let bar of chart.bars" style="display: flex; flex-direction: column; align-items: center; min-width: 38px; justify-content: flex-end; height: 100%;">
+          
+          <!-- Tooltip Amount values indicator -->
+          <span style="color: #a6e3a1; font-size: 9px; font-weight: 700; margin-bottom: 4px;">
+            ${{ bar.amount }}
+          </span>
+           <!-- Individual Day Column Bars -->
+          <div [style.height.%]="bar.scalePercentage" 
+               style="width: 100%; background: linear-gradient(180deg, #89b4fa 0%, #b4befe 100%); border-radius: 3px 3px 0 0;"
+               [title]="bar.label + ': $' + bar.amount">
+          </div>
+
+          <!-- X-Axis text Label date flags -->
+          <span style="color: #a6adc8; font-size: 9px; margin-top: 6px; font-weight: 600; white-space: nowrap;">
+            {{ bar.label }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

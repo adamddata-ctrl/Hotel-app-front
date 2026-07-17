@@ -27,17 +27,43 @@
   <!-- Right Workspace Pane: Active Running Bill Summary -->
   <div class="ticket-pane">
     <div class="ticket-header">
-      <h3>ACTIVE ORDER TICKET</h3>
+      <h3>ACTIVE ORDER TICKET</h3> 
+
+
+
+<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid #313244; padding-bottom: 10px; margin-bottom: 12px;">
+  <span style="font-weight: 700; font-size: 14px; color: #cdd6f4; letter-spacing: 0.5px;">ACTIVE ORDER TICKET</span>
+  
+  <button (click)="executeShiftCloseoutRoutine()" 
+          style="background-color: rgba(249, 226, 175, 0.12); color: #f9e2af; font-weight: 700; border: 1px solid rgba(249, 226, 175, 0.4); border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer; transition: all 0.15s ease;"
+          onmouseover="this.style.backgroundColor='#f9e2af'; this.style.color='#11111b'"
+          onmouseout="this.style.backgroundColor='rgba(249, 226, 175, 0.12)'; this.style.color='#f9e2af';">
+    🏁 CLOSE SHIFT
+  </button>
+</div>
+
+
+
+
+
+
       <div class="meta-row"><span>Waiter:</span> <strong>{{ selectedWaiterName }}</strong></div>
       <div class="meta-row"><span>Cashier:</span> <span>{{ cashierName }}</span></div>
     </div>
-
      <!-- List item block container tracking rows -->
     <div class="ticket-items">
       <div class="empty-state" *ngIf="cart.length === 0">
         🛒 Cart is empty. Tap menu items to begin.
       </div>
       <div class="ticket-row" *ngFor="let c of cart">
+        <!-- 🗑️ SELECTIVE LINE-ITEM DELETION TRIGGERS -->
+        <button (click)="removeItemFromCart(c)" 
+                style="background: transparent; border: none; color: #f38ba8; font-size: 13px; cursor: pointer; float: right; font-weight: 800; margin-left: auto; padding: 2px 6px;"
+                title="Drop 1 item count from ticket row">
+          ❌
+        </button>
+       
+       
         <div class="row-details">
           <span class="qty-badge">{{ c.quantity }}x</span>
           <span class="row-name">{{ c.itemName }}</span>
@@ -47,28 +73,58 @@
     </div>
 
     <!-- Final calculated summary balance totals and execution triggers -->
-    <div class="ticket-footer">
-         <div class="total-row">
-        <span>TOTAL DUE:</span>
-        <span class="grand-total">${{ calculateTotal() | number:'1.2-2' }}</span>
-      </div>
-      <button class="print-btn" [disabled]="cart.length === 0" (click)="submitAndPrintTicket()">
+   
+   
+   <!-- Final calculated summary balance totals and execution triggers -->
+  <div class="ticket-footer">
+    <div class="total-row">
+      <span>TOTAL DUE:</span>
+      <span class="grand-total">${{ calculateTotal() | number:'1.2-2' }}</span>
+    </div>
+    
+    <!-- 🎛️ Interactive Dual-Action Execution Row -->
+    <div class="footer-actions-row" style="display: flex; gap: 12px; margin-top: 10px;">
+      
+      <!-- ❌ NEW: Cancel Uncommitted Browser Memory State Cart Row Button -->
+      <button 
+        class="cancel-btn" 
+        [disabled]="cart.length === 0" 
+        (click)="clearUncommittedCart()"
+
+  style="width: 35%; background-color: #f38ba8; color: #11111b; border: none; border-radius: 6px; padding: 12px; font-weight: 700; cursor: pointer;"
+      >
+        ❌ CANCEL
+      </button>
+
+      <!-- Your excellent original printing checkout trigger -->
+      <button 
+        class="print-btn" 
+        [disabled]="cart.length === 0" 
+        (click)="submitAndPrintTicket()"
+        style="width: 65%; background-color: #a6e3a1; color: #11111b; border: none; border-radius: 6px; padding: 12px; font-weight: 700; cursor: pointer;"
+      >
         🖨️ PRINT TICKET
       </button>
+
     </div>
   </div>
-
-  <!-- DRIVER-FREE RECEIPT PRINT OUT BLOCK (Hidden from UI, visible only to printer) -->
+ 
+ 
+ 
+ 
+ 
+ 
+  <!-- DRIVER-FREE RECEIPT PRINT OUT BLOCK (Kitchen Slip) -->
   <div id="receipt-print-area">
     <div class="receipt-header">
       <h2>HOTEL RESTAURANT</h2>
       <p>KITCHEN ROUTING SLIP</p>
       <p>--------------------------------</p>
     </div>
-     <div class="receipt-meta">
-      <p>Date: Friday, Jul 10, 2026</p>
+    <div class="receipt-meta">
+      <p>Date: {{ today | date:'fullDate' }}</p>
       <p>Waiter: {{ selectedWaiterName }}</p>
-      <p>Cashier: {{ cashierName }}</p>
+       <p>Cashier: {{ cashierName }}</p>
       <p>--------------------------------</p>
     </div>
     <div class="receipt-body">
@@ -82,6 +138,53 @@
       <h3>TOTAL: ${{ calculateTotal() | number:'1.2-2' }}</h3>
       <p>SENT TO ROUTING QUEUE</p>
     </div>
+  </div>
+</div>
+
+<!-- 🔥 OPTIMIZED DYNAMIC THERMAL HARDWARE RECEIPT (Customer Copy) -->
+<div id="thermal-receipt-hardware-layout">
+  <div class="receipt-center">
+    <h3>HOTEL POS SYSTEM</h3>
+    <p>Multi-Tenant SaaS Platform</p>
+  </div>
+  
+  <div class="receipt-divider"></div>
+  
+  <div class="receipt-flex-row">
+    <span>Date: {{ today | date:'dd/MM/yyyy' }}</span>
+    <span>Time: {{ today | date:'shortTime' }}</span>
+  </div>
+  <div class="receipt-flex-row">
+    <span>Cashier: {{ cashierName }}</span>
+    <span>Waiter: {{ selectedWaiterName }}</span>
      </div>
 
+  <div class="receipt-divider"></div>
+  
+  <!-- Active Order Lines Header -->
+  <div class="receipt-flex-row" style="font-weight: bold;">
+    <span>Item Description</span>
+    <span>Qty/Price</span>
+  </div>
+  
+  <div class="receipt-divider"></div>
+  
+  <!-- 🔥 DYNAMIC CART LOOP: Iterates exactly over what was tapped on screen -->
+  <div class="receipt-flex-row" *ngFor="let item of cart">
+    <span>{{ item.itemName }}</span>
+    <span>{{ item.quantity }} x {{ item.unitPrice | currency }}</span>
+  </div>
+   <div class="receipt-divider"></div>
+  
+  <!-- Dynamic Calculated Grand Total -->
+  <div class="receipt-flex-row" style="font-size: 14px; font-weight: bold;">
+    <span>TOTAL DUE:</span>
+    <span>{{ calculateTotal() | currency }}</span>
+  </div>
+  
+  <div class="receipt-divider"></div>
+  <div class="receipt-center" style="margin-top: 10px;">
+    <p>Thank You For Your Visit!</p>
+    <small>Powered by Adam Demeke POS Architecture</small>
+  </div>
 </div>

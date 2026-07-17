@@ -1,40 +1,59 @@
 <div class="metrics-widget">
-  
-  <!-- Interactive Date Filter Panel Configuration Bounds -->
+
+  <!-- 📅 Interactive Date Filter Panel Configuration Bounds -->
   <div class="filter-controls">
-    <label for="summary-date">📅 CHOOSE CALENDAR EVALUATION DATE:</label>
-    <input 
-      type="date" 
-      id="summary-date" 
-      [ngModel]="selectedDate" 
-      (ngModelChange)="onDateChange($event)" 
+    <label for="summary-date">⚠️ CHOOSE CALENDAR EVALUATION DATE: </label>
+    <input
+      type="date"
+      id="summary-date"
+      [ngModel]="selectedDate"
+      (ngModelChange)="onDateChange($event)"
     />
-     </div>
+  </div>
 
   <!-- Loading State Presentation Placeholder Toggle -->
-  <div class="loading-state" *ngIf="isLoading">Re-calculating financial tracking ledgers...</div>
+  <div class="loading-state" *ngIf="isLoading">
+     Re-calculating financial tracking ledgers...
+  </div>
 
   <!-- Error Alerts Container -->
   <div class="error-banner" *ngIf="errorMessage && !isLoading">
     ⚠️ {{ errorMessage }}
   </div>
 
-  <!-- Main KPI Snapshot Balance Sheet Scorecard Block Grid Matrix Layout -->
-  <div class="scorecard-grid" *ngIf="summaryData && !isLoading">
+  <!-- 📊 Main KPI Snapshot Balance Sheet Scorecard Block Grid Matrix Layout -->
+  <div class="scorecard-grid">
     
-    <!-- Revenue Intake Total Display Metric Card Component -->
-    <div class="kpi-card revenue-card">
+    <!-- 🔥 1. ADDED: High-Visibility Multi-Tenant Lifetime Gross Revenue Anchor Card -->
+    <!-- This anchor panel stays independent of individual calendar date calculation failures [3.1] -->
+    <div class="kpi-card business-gross-card" style="background: linear-gradient(135deg, #2c1a4d 0%, #1e1e2e 100%); border-left: 4px solid #cba6f7;">
+      <div class="kpi-label" style="color: #cba6f7; font-weight: 700;">TOTAL LIFETIME GROSS REVENUE</div>
+      <div class="kpi-value">${{ totalRevenue | number: '1.2-2' }}</div>
+      <div class="kpi-footer">Isolated Workspace Balance Ledger</div>
+    </div>
+     <!-- 2. Revenue Intake Total Display Metric Card Component -->
+    <div class="kpi-card revenue-card" *ngIf="summaryData && !isLoading">
       <div class="kpi-label">TOTAL CONSOLIDATED DAILY REVENUE</div>
-      <div class="kpi-value">${{ summaryData.totalRevenue | number:'1.2-2' }}</div>
+      <div class="kpi-value">${{ summaryData.totalRevenue | number: '1.2-2' }}</div>
       <div class="kpi-footer">Live Cash Register Balances</div>
     </div>
 
-    <!-- Ticket Velocity Velocity Evaluation Tracker Component Card -->
-    <div class="kpi-card order-card">
+    <!-- 3. Ticket Velocity Evaluation Tracker Component Card -->
+    <div class="kpi-card order-card" *ngIf="summaryData && !isLoading">
       <div class="kpi-label">AGGREGATE DAILY ORDER VELOCITY</div>
       <div class="kpi-value">{{ summaryData.totalOrders }} Orders</div>
       <div class="kpi-footer">Total Kitchen Routing Slips Processed</div>
     </div>
 
+    <!-- 4. Average Ticket Value Financial Indicator Card -->
+    <div class="kpi-card average-card" *ngIf="summaryData && !isLoading">
+      <div class="kpi-label">AVERAGE TRANSACTION VALUE</div>
+      <div class="kpi-value">
+         ${{ (summaryData.totalOrders > 0 ? (summaryData.totalRevenue / summaryData.totalOrders) : 0) | number: '1.2-2' }}
+      </div>
+      <div class="kpi-footer">Calculated Ticket Value Size Mean</div>
+    </div>
+
   </div>
+
 </div>

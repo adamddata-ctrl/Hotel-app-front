@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core'; // 🔥 FIXED: Injected 'Input' decorator metadata token
 import { ReportsService, DailySummary } from '../services/reports.service';
 
 @Component({
@@ -7,12 +7,18 @@ import { ReportsService, DailySummary } from '../services/reports.service';
   styleUrls: ['./summary-metrics.component.css']
 })
 export class SummaryMetricsComponent implements OnInit {
+
+  // 🔥 THE DATA REVENUE PIPELINE BRIDGE CHANNEL:
+  // Dynamically captures the isolated multi-tenant lifetime gross totals from the parent dashboard view
+  @Input() totalRevenue: number = 0.00;
+
   // Initialize default fallback target date parameters to the current calendar date
   selectedDate: string = new Date().toISOString().split('T')[0];
   summaryData: DailySummary | null = null;
   errorMessage: string = '';
-  isLoading: boolean = false;
-   constructor(private reportsService: ReportsService) {}
+   isLoading: boolean = false;
+
+  constructor(private reportsService: ReportsService) { }
 
   /**
    * Fires immediate summary evaluations upon screen initialization
@@ -28,11 +34,13 @@ export class SummaryMetricsComponent implements OnInit {
     this.selectedDate = newDate;
     this.loadDailyFinancialSummary();
   }
-
+   /**
+   * Pulls localized data metrics matching individual calendar dates cleanly
+   */
   loadDailyFinancialSummary(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    
+
     this.reportsService.getDailySummary(this.selectedDate)
       .subscribe({
         next: (data) => {
@@ -43,7 +51,7 @@ export class SummaryMetricsComponent implements OnInit {
           this.errorMessage = 'Could not resolve financial logs for the selected date.';
           this.isLoading = false;
           this.summaryData = null;
-        }
+         }
       });
-    }
   }
+}

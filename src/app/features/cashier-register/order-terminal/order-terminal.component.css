@@ -279,3 +279,48 @@
     font-size: 16px;
   }
 }
+
+
+
+/* ==========================================================================
+   📦 HEADLESS PRINT ENGINE: Activates strictly when window.print() is called
+   ========================================================================== */
+@media print {
+  /* 1. Hide everything on the screen (Grid, buttons, banners, dark background) */
+  body, app-root, .order-terminal-container, .items-grid, button, nav {
+    display: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* 2. Unhide only your custom receipt structural blueprint container */
+  #thermal-receipt-hardware-layout, #thermal-receipt-hardware-layout * {
+    display: block !important;
+  }
+
+  /* 3. Style layout boundaries optimized specifically for standard 80mm POS receipt rolls */
+  #thermal-receipt-hardware-layout {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 76mm; /* Safe print margin limits inside 80mm rolls */
+    font-family: 'Courier New', Courier, monospace; /* Clean fixed-width text spacing */
+    font-size: 12px;
+    line-height: 1.4;
+    color: #000000 !important;
+    background: #ffffff !important;
+    padding: 2mm;
+  }
+
+   /* Structural typography decorators for formatting clean transaction lines */
+  .receipt-center { text-align: center; font-weight: bold; }
+  .receipt-divider { border-bottom: 1px dashed #000; margin: 5px 0; }
+  .receipt-flex-row { display: flex; justify-content: space-between; }
+}
+
+/* Ensure receipt preview container stays invisible on standard cashier monitor workstation layouts */
+@media screen {
+  #thermal-receipt-hardware-layout {
+    display: none !important;
+  }
+}

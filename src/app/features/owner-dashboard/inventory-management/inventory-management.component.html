@@ -1,0 +1,151 @@
+<div class="warehouse-widget-container">
+  
+  <!-- 📊 Top Action Branding Panel -->
+  <div class="warehouse-header">
+    <div class="title-block">
+      <h2>INVENTORY MANAGEMENT CONTROL HUB</h2>
+      <p>Configure stock bounds, manage manual audits, and monitor recipe ingredient parameters [3.1].</p>
+    </div>
+    <button class="sync-matrix-btn" (click)="refreshWarehouseMatrix()">
+      🔄 RE-SYNC LIVE CATALOGS
+    </button>
+  
+ <!-- 🔥 ADDED: Click action to spawn the supply registration window [3.1] -->
+      <button class="sync-matrix-btn" (click)="openCreateModal()" style="border-color: #a6e3a1; color: #a6e3a1; margin-left: 10px;">
+        ➕ ADD NEW SUPPLIES
+      </button>
+
+</div>
+  
+
+  <div class="error-banner" *ngIf="errorMessage">⚠️ {{ errorMessage }}</div>
+
+  <!-- Shimmer Load Feedback -->
+  <div class="loading-state" *ngIf="isLoading && stockItems.length === 0">
+    Processing central store registries... Please hold.
+     </div>
+
+  <!-- 📦 Master Stock Inventory Spreadsheet Matrix Grid -->
+  <div class="spreadsheet-list-card" *ngIf="!isLoading || stockItems.length > 0">
+    <table class="inventory-data-table">
+      <thead>
+        <tr>
+          <th>Stock Item Name Description</th>
+          <th class="text-center">Unit Type</th>
+          <th class="text-right">Current Stock Level</th>
+          <th class="text-right">Warning Level Threshold</th>
+          <th class="text-center">Inventory Action Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of stockItems" [class.low-stock-row]="item.quantityOnHand <= item.minStockLevel">
+          
+          <td class="font-bold">
+             {{ item.itemName }}
+            <span class="alert-tag" *ngIf="item.quantityOnHand <= item.minStockLevel">⚠️ LOW STOCK</span>
+          </td>
+          
+          <!-- Unit Designation Badge -->
+          <td class="text-center">
+            <span class="unit-badge">{{ item.unitOfMeasure | uppercase }}</span>
+          </td>
+          
+          <!-- Current QuantitiesOnHand Values Layer -->
+          <td class="text-right font-bold" [class.text-red]="item.quantityOnHand <= item.minStockLevel" [class.text-green]="item.quantityOnHand > item.minStockLevel">
+            {{ item.quantityOnHand | number:'1.2-2' }}
+          </td>
+          
+          <!-- Minimum warning thresholds -->
+          <td class="text-right text-gray font-medium">
+            {{ item.minStockLevel | number:'1.2-2' }}
+          </td>
+           <!-- Interactive Action Block Options Columns [3.1] -->
+          <td class="text-center actions-cell">
+            <button class="opt-btn btn-receive" (click)="openAdjustmentModal(item, 'RECEIVE')">📥 RECEIVE PO</button>
+            <button class="opt-btn btn-adjust" (click)="openAdjustmentModal(item, 'ADJUST')">🔧 ADJUST STOCK</button>
+            <button class="opt-btn btn-count" (click)="openAdjustmentModal(item, 'COUNT')">📝 STOCKTAKE COUNT</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🪟 Interactive Overlay Modal Forms Card Sheet Container [3.1] -->
+  <div class="modal-overlay-backdrop" *ngIf="selectedItem">
+    <div class="action-modal-card">
+      <div class="modal-title-row">
+        <h3>
+             <span *ngIf="activeActionType === 'RECEIVE'">📥 RECEIVE SUPPLIER PURCHASE ORDER</span>
+          <span *ngIf="activeActionType === 'ADJUST'">🔧 LOG MANUAL STOCK ADJUSTMENT</span>
+          <span *ngIf="activeActionType === 'COUNT'">📝 EXECUTE PHYSICAL STOCKTAKE COUNT</span>
+        </h3>
+        <button class="close-x-btn" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="modal-body-content">
+        <p class="target-item-info">Item Selection: <strong>{{ selectedItem.itemName }}</strong> (Current: {{ selectedItem.quantityOnHand }} {{ selectedItem.unitOfMeasure }})</p>
+        
+        <div class="modal-input-group">
+          <label *ngIf="activeActionType === 'RECEIVE'">Quantity to Add from Supplier Batch Order:</label>
+          <label *ngIf="activeActionType === 'ADJUST'">Adjustment Delta (+ to increase, - to decrease value):</label>
+          <label *ngIf="activeActionType === 'COUNT'">Definitive Absolute Value Count Checked on Floor Line:</label>
+          <input type="number" [(ngModel)]="inputValueModifier" placeholder="0.00" step="0.01" />
+        </div>
+      </div>
+        <div class="modal-footer-row">
+        <button class="modal-btn-cancel" (click)="closeModal()">CANCEL</button>
+        <button class="modal-btn-commit" (click)="commitInventoryAction()">COMMIT CHANGES</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+ <!-- 🪟 Interactive Add New Supplies Overlay Modal Form [3.1] -->
+  <div class="modal-overlay-backdrop" *ngIf="isCreateModalOpen">
+    <div class="action-modal-card">
+      <div class="modal-title-row" style="border-bottom-color: #a6e3a1;">
+        <h3 style="color: #a6e3a1;">➕ REGISTER NEW INVENTORY ASSET</h3>
+        <button class="close-x-btn" (click)="closeCreateModal()">×</button>
+      </div>
+
+      <div class="modal-body-content">
+        <!-- Field 1: Name Description -->
+        <div class="modal-input-group" style="margin-bottom: 14px;">
+          <label>Item Name Description (e.g., Cooking Flour, Mozzarella):</label>
+          <input type="text" [(ngModel)]="newItemForm.itemName" placeholder="Enter item name..." />
+        </div>
+
+        <!-- Field 2: Unit Type Selector -->
+        <div class="modal-input-group" style="margin-bottom: 14px;">
+          <label>Metric Unit Type Designation:</label>
+           <select [(ngModel)]="newItemForm.unitOfMeasure" style="width: 100%; background-color: #11111b; border: 1px solid #313244; border-radius: 8px; padding: 10px; color: #cdd6f4; font-size: 14px;">
+            <option value="pcs">Pieces (pcs)</option>
+            <option value="kg">Kilograms (kg)</option>
+            <option value="ltr">Liters (ltr)</option>
+            <option value="g">Grams (g)</option>
+          </select>
+        </div>
+
+        <!-- Row: Quantities and Warning Bounds -->
+        <div style="display: flex; gap: 12px; margin-bottom: 4px;">
+          <div class="modal-input-group" style="flex: 1;">
+            <label>Initial Opening Stock:</label>
+            <input type="number" [(ngModel)]="newItemForm.quantityOnHand" step="0.01" />
+          </div>
+          <div class="modal-input-group" style="flex: 1;">
+            <label>Min Warning Level:</label>
+            <input type="number" [(ngModel)]="newItemForm.minStockLevel" step="0.01" />
+          </div>
+           </div>
+      </div>
+
+      <div class="modal-footer-row">
+        <button class="modal-btn-cancel" (click)="closeCreateModal()">CANCEL</button>
+        <button class="modal-btn-commit" (click)="submitNewItem()" style="background-color: #a6e3a1; color: #11111b;">SAVE SUPPLIES</button>
+      </div>
+    </div>
+  </div>
+  
