@@ -1,99 +1,131 @@
+/* Centered Full-Screen Shell Wrapper */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #1a202c; /* Deep modern charcoal backdrop */
+  background-color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Polished Core Login Interface Panel Box */
 .login-card {
-  background-color: #2d3748; /* Slate card color */
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  text-align: center;
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 380px;
+  max-width: 360px;
+  text-align: center;
   }
 
-h2 {
-  color: #ffffff;
-  margin: 0 0 8px 0;
-  font-size: 24px;
-  letter-spacing: 0.5px;
+/* Header Text Presentation Elements */
+.login-header h2 {
+  color: #1e293b;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-.subtitle {
-  color: #a0aec0;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 24px;
+.login-header .subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
 }
-/* Pin Display Tracker Dots */
-.pin-display-dots {
+
+/* Flex Tracking Indicator Row for 4-Digit Security Entry */
+.dots-row {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
 }
 
+/* Static PIN Dot Bubble Base State Configuration */
 .dot {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #4a5568;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  transition: all 0.15s ease-in-out;
-}
-.dot.filled {
-  background-color: #3182ce; /* Electric blue dot fills up when pressed */
-  border-color: #3182ce;
-  transform: scale(1.15);
+  border: 2px solid #cbd5e1;
+  background-color: transparent;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.error-banner {
-  background-color: #fed7d7;
-  color: #c53030;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 20px;
+/* Pop Feedback Color Configuration for Active Filled Dots */
+.dot.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  transform: scale(1.15);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
 }
-/* 3x4 Touch Grid Settings */
+
+/* Responsive Multi-Tenant Security Error Banner Block */
+.error-panel {
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: shake 0.2s ease-in-out;
+}
+
+/* Responsive 3-Column Touchscreen Grid System Wrapper */
 .pin-pad-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 0.85rem;
 }
 
-.pin-pad-grid button {
-  background-color: #4a5568;
-  color: #ffffff;
-  border: none;
-  padding: 20px 0;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 8px;
+/* Tactile Numeric Buttons Layout Parameters */
+.grid-btn {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 1.6rem;
+  font-weight: 600;
+  height: 68px;
+  border-radius: 12px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   user-select: none;
-   transition: background-color 0.1s ease;
+  transition: all 0.1s ease;
 }
 
-.pin-pad-grid button:active {
-  background-color: #2b6cb0; /* Changes to dark blue upon instant tactile touch feedback */
+/* Active Pressed Feedback Effects for Rapid Input Triggers */
+.grid-btn:active:not(.disabled-btn) {
+  background-color: #e2e8f0;
+  transform: scale(0.96);
 }
 
-.pin-pad-grid .clear-btn {
-  background-color: #e53e3e;
-  font-size: 14px;
-}
-
-.pin-pad-grid .clear-btn:active {
-  background-color: #9b2c2c;
-}
-
-.pin-pad-grid .disabled-btn { 
-     background-color: transparent;
+/* Specialized Transparent Spacer Column Configuration Override */
+.disabled-btn {
+  background-color: transparent;
+  border-color: transparent;
   cursor: default;
+}
+
+/* Ergonomic Destructive Action Control Layout Parameters */
+.clear-btn {
+  background-color: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.clear-btn:active {
+  background-color: #ffe4e6 !important;
+}
+
+/* Micro-Animation Error Banner Notification Shaking Component */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }

@@ -1,37 +1,48 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>HOTEL RESTAURANT POS</h2>
-    <p class="subtitle">ENTER CASHIER PIN</p>
-
-    <!-- Visual Code Dot Matrix Trackers -->
-    <div class="pin-display-dots">
-      <span class="dot" [class.filled]="pinBuffer.length >= 1"></span>
-      <span class="dot" [class.filled]="pinBuffer.length >= 2"></span>
-      <span class="dot" [class.filled]="pinBuffer.length >= 3"></span>
-      <span class="dot" [class.filled]="pinBuffer.length >= 4"></span>
+    
+    <!-- Workspace & Branding Header Area -->
+    <div class="login-header">
+      <h2>Terminal Login</h2>
+      <p class="subtitle">Enter your 4-digit security PIN</p>
     </div>
 
-    <!-- Error Messaging Notification Context -->
-    <div class="error-banner" *ngIf="errorMessage">
-      {{ errorMessage }}
+    <!-- Dynamic Target PIN Status Indicator Row -->
+    <div class="pin-display">
+      <div class="dots-row">
+        <span class="dot" [class.active]="pinBuffer.length >= 1"></span>
+        <span class="dot" [class.active]="pinBuffer.length >= 2"></span>
+        <span class="dot" [class.active]="pinBuffer.length >= 3"></span>
+        <span class="dot" [class.active]="pinBuffer.length >= 4"></span>
+      </div>
+      </div>
+
+    <!-- Multi-Tenant Dynamic Error Notification Panel -->
+    <div class="error-panel" *ngIf="errorMessage">
+      <p>{{ errorMessage }}</p>
     </div>
-     <!-- 0-9 Screen Numeric Touch Matrix Grid Panel -->
+
+    <!-- Intuitive Touchscreen 3x4 Matrix Numeric Keypad Grid -->
     <div class="pin-pad-grid">
-      <button (click)="handleNumberInput('1')">1</button>
-      <button (click)="handleNumberInput('2')">2</button>
-      <button (click)="handleNumberInput('3')">3</button>
-      
-      <button (click)="handleNumberInput('4')">4</button>
-      <button (click)="handleNumberInput('5')">5</button>
-      <button (click)="handleNumberInput('6')">6</button>
-      
-      <button (click)="handleNumberInput('7')">7</button>
-      <button (click)="handleNumberInput('8')">8</button>
-      <button (click)="handleNumberInput('9')">9</button>
-      
-      <button class="clear-btn" (click)="handleClear()">CLEAR</button>
-      <button (click)="handleNumberInput('0')">0</button>
-      <button class="disabled-btn" disabled></button>
-       </div>
+      <!-- Row 1 -->
+      <button class="grid-btn" (click)="handleNumberInput('1')">1</button>
+      <button class="grid-btn" (click)="handleNumberInput('2')">2</button>
+      <button class="grid-btn" (click)="handleNumberInput('3')">3</button>
+
+      <!-- Row 2 -->
+      <button class="grid-btn" (click)="handleNumberInput('4')">4</button>
+      <button class="grid-btn" (click)="handleNumberInput('5')">5</button>
+      <button class="grid-btn" (click)="handleNumberInput('6')">6</button>
+       <!-- Row 3 -->
+      <button class="grid-btn" (click)="handleNumberInput('7')">7</button>
+      <button class="grid-btn" (click)="handleNumberInput('8')">8</button>
+      <button class="grid-btn" (click)="handleNumberInput('9')">9</button>
+
+      <!-- Row 4: Clean, Ergonomic Balance Layout Split -->
+      <button class="grid-btn disabled-btn" disabled></button>
+      <button class="grid-btn zero-btn" (click)="handleNumberInput('0')">0</button>
+      <button class="grid-btn clear-btn" (click)="handleClear()">CLEAR</button>
+    </div>
+
   </div>
 </div>

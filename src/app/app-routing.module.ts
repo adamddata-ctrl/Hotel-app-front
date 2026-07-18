@@ -5,7 +5,7 @@ import { CashierLoginComponent } from './features/auth/cashier-login/cashier-log
 import { WaiterSelectionComponent } from './features/cashier-register/waiter-selection/waiter-selection.component';
 import { OrderTerminalComponent } from './features/cashier-register/order-terminal/order-terminal.component';
 import { DashboardHomeComponent } from './features/owner-dashboard/dashboard-home/dashboard-home.component';
-import { MenuManagementComponent } from './features/owner-dashboard/menu-management/menu-management.component';
+import { SummaryMetricsComponent } from './features/owner-dashboard/summary-metrics/summary-metrics.component';
 // 🔥 FIXED 1: Import your genuine InventoryManagementComponent path cleanly
 import { InventoryManagementComponent } from './features/owner-dashboard/inventory-management/inventory-management.component';
 
@@ -13,6 +13,7 @@ import { InventoryManagementComponent } from './features/owner-dashboard/invento
 import { authGuard } from './core/guards/auth.guards';
 import { tenantGuard } from './core/guards/tenant.guard';
 import { SalesChartComponent } from './features/owner-dashboard/sales-chart/sales-chart.component';
+import { MenuManagementComponent } from './features/owner-dashboard/menu-management/menu-management.component';
 
 const routes: Routes = [
   // 1. Root route automatically mounts your touchscreen PIN pad display layout
@@ -58,6 +59,15 @@ const routes: Routes = [
     path: 'dashboard/inventory-management',
     component: InventoryManagementComponent
   },
+
+  // Look for your owner dashboard path inside app-routing.module.ts
+{ 
+  path: 'owner-dashboard', // <-- Check if it is spelled exactly like this
+  component: DashboardHomeComponent,
+  children: [
+    { path: 'summary-metrics', component: SummaryMetricsComponent }
+  ]
+},
 
   {
     path: 'dashboard/sales-charts',
