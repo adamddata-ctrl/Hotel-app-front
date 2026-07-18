@@ -39,7 +39,7 @@ export class CashierLoginComponent implements OnInit {
   private executePinValidation(): void {
   const payload = { pin: this.pinBuffer };
 
-  this.http.post<any>('http://localhost:8080/api/auth/cashier-login', payload)
+ this.http.post<any>('/api/auth/cashier-login', payload)
     .subscribe({
       next: (response) => {
         // 1. Core Safeguard: Only proceed if authentication succeeded and a valid tenant workspace ID exists

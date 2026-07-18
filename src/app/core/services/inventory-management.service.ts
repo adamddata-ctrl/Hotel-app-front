@@ -20,7 +20,7 @@ interface InventoryActionPayload {
 export class InventoryManagementService {
   
   // Base endpoint matching our running Spring Boot InventoryController mapping contract [3.1]
-  private baseUrl = 'http://localhost:8080/api/inventory-management';
+  private baseUrl = '/api/inventory-management';
 
   constructor(private http: HttpClient) { }
 
@@ -77,7 +77,9 @@ export class InventoryManagementService {
    */
   addMenuItemToCatalog(menuItemPayload: { itemName: string; price: number; category: string }): Observable<any> {
     // Hits port 8080 to trigger your menu catalog insert routine safely [3.1]
-    return this.http.post<any>('http://localhost:8080/api/menu/add', menuItemPayload);
+  
+      return this.http.post<any>('/api/menu/add', menuItemPayload);
+      
   }
   
 }

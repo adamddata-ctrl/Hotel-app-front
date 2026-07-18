@@ -12,8 +12,7 @@ export interface RevenuePacket {
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private readonly apiEndpoint = 'http://localhost:8080/api/analytics/total-revenue';
-
+ private readonly apiEndpoint = '/api/analytics/total-revenue'
   constructor(private http: HttpClient) { }
 
   /**
@@ -29,6 +28,6 @@ export class AnalyticsService {
    * Hits your Spring Boot endpoint on port 8080 smoothly! [3.1]
    */
   fetchDailyMonthBars(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:8080/api/analytics/daily-month-bars');
+    return this.http.get<any[]>('/api/analytics/daily-month-bars');
   }
 }
