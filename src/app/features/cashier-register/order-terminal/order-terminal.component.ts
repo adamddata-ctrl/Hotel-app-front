@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { InventoryManagementService } from '../../../core/services/inventory-management.service';
 import { Router } from '@angular/router';
 import { ReceiptPrinterService, PrintReceiptPayload } from '../../../core/services/receipt-printer.service'; // 🔥 FIXED: Imports your custom service path cleanly
+import { environment } from '../../../../environments/environment';
 
 interface MenuItem {
   id: number;
@@ -61,7 +62,7 @@ export class OrderTerminalComponent implements OnInit {
   }
 
   fetchMenuCatalog(): void {
-    this.http.get<MenuItem[]>('http://localhost:8080/api/menu/all')
+    this.http.get<MenuItem[]>(`${environment.apiUrl}/api/menu/all`)
       .subscribe({
         next: (data) => {
           this.menuItems = data;
@@ -101,7 +102,7 @@ export class OrderTerminalComponent implements OnInit {
     }
 
     // 1. First, tell the backend to stamp the Clock-Out timestamp and compute hours worked [3.1]
-   this.http.post<any>('http://localhost:8080/api/auth/cashier-logout', { cashierId: activeCashierId })
+   this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-logout`, { cashierId: activeCashierId })
       .subscribe({
         next: (logoutLog: any) => {
           console.log('🛡️ TIME CLOCK: Shift close logged.', logoutLog.message);
@@ -206,7 +207,7 @@ CREDIT CARD TRANSFERS     : $${data.cardInflow.toFixed(2)}
       items: formattedItems
     };
 
-    this.http.post<any>('http://localhost:8080/api/checkout/order', payload)
+    this.http.post<any>(`${environment.apiUrl}/api/checkout/order`, payload)
       .subscribe({
         next: (response) => {
           // ==========================================================================

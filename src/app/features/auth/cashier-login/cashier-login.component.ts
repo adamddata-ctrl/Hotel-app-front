@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cashier-login',
@@ -39,7 +40,7 @@ export class CashierLoginComponent implements OnInit {
   private executePinValidation(): void {
   const payload = { pin: this.pinBuffer };
 
- this.http.post<any>('/api/auth/cashier-login', payload)
+this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
     .subscribe({
       next: (response) => {
         // 1. Core Safeguard: Only proceed if authentication succeeded and a valid tenant workspace ID exists

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface MenuItem {
   id?: number;
@@ -35,7 +36,7 @@ export class MenuManagementComponent implements OnInit {
    */
   fetchCurrentMenu(): void {
     this.isLoading = true;
-    this.http.get<MenuItem[]>('http://localhost:8080/api/menu/all')
+    this.http.get<MenuItem[]>(`${environment.apiUrl}/api/menu/all`)
       .subscribe({
         next: (data) => {
           this.menuItems = data;
@@ -62,7 +63,7 @@ export class MenuManagementComponent implements OnInit {
       price: this.newItemPrice
     };
 
-    this.http.post('http://localhost:8080/api/menu/add', payload)
+    this.http.post(`${environment.apiUrl}/api/menu/add`, payload)
       .subscribe({
         next: () => {
            this.fetchCurrentMenu(); // Re-trigger catalog synchronization loop to update the layout rows instantly
@@ -89,7 +90,7 @@ export class MenuManagementComponent implements OnInit {
     const confirmationGuard = confirm('⚠️ ARE YOU SURE? This completely removes this item from the register system!');
     if (!confirmationGuard) return;
 
-    this.http.delete(`http://localhost:8080/api/menu/delete/${itemId}`).subscribe({
+    this.http.delete(`${environment.apiUrl}/api/menu/delete/${itemId}`).subscribe({
       next: () => {
         // Instantly filter out the item row from the local view matrix state with zero page reloads [3.1]
         this.menuItems = this.menuItems.filter(item => item.id !== itemId);

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 interface KitchenItem {
   itemName: string;
@@ -35,7 +36,7 @@ export class KitchenScreenComponent implements OnInit, OnDestroy {
     this.pollingSubscription = interval(5000)
       .pipe(
         startWith(0),
-        switchMap(() => this.http.get<KitchenOrder[]>('http://localhost:8080/api/checkout/orders/open'))
+        switchMap(() => this.http.get<KitchenOrder[]>(`${environment.apiUrl}/api/checkout/orders/open`))
       )
       .subscribe({
         next: (data) => {
@@ -54,7 +55,7 @@ export class KitchenScreenComponent implements OnInit, OnDestroy {
    * Clears out an order ticket card dynamically from the screen once dishes are prepared
    */
   fulfillOrderTicket(orderId: number): void {
-    this.http.post(`http://localhost:8080/api/checkout/orders/${orderId}/fulfill`, {})
+    this.http.post(`${environment.apiUrl}/api/checkout/orders/${orderId}/fulfill`, {})
       .subscribe({
         next: () => {
           // Instantly filter out the card from the UI layout matrix state for maximum responsive speed

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { environment } from '../../../../environments/environment';
 interface Waiter {
   id: number;
   waiterName: string;
@@ -34,7 +34,7 @@ export class WaiterSelectionComponent implements OnInit {
    * Note: The TenantInterceptor automatically handles attaching the X-Tenant-ID header.
    */
   fetchActiveWaiters(): void {
-    this.http.get<Waiter[]>('http://localhost:8080/api/waiters/active')
+    this.http.get<Waiter[]>(`${environment.apiUrl}/api/waiters/active`)
       .subscribe({
         next: (data) => {
           this.waitersList = data;
@@ -71,7 +71,7 @@ export class WaiterSelectionComponent implements OnInit {
     if (!this.newWaiterName.trim()) return;
 
     const payload = { waiterName: this.newWaiterName };
-    this.http.post('http://localhost:8080/api/waiters/create', payload)
+    this.http.post(`${environment.apiUrl}/api/waiters/create`, payload)
       .subscribe({
         next: () => {
           this.toggleAddModal();
