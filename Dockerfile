@@ -4,7 +4,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build -- --configuration=production
+#RUN npm run build -- --configuration=production
+# Replace line 7 with a direct call to the Angular compiler
+RUN npx ng build --configuration=production
 
 # Stage 2: Serve the application using Nginx
 FROM nginx:alpine
