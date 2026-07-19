@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface InventoryItem {
   id: number;
@@ -20,8 +21,10 @@ interface InventoryActionPayload {
 export class InventoryManagementService {
   
   // Base endpoint matching our running Spring Boot InventoryController mapping contract [3.1]
-  private baseUrl = '/api/inventory-management';
+  //private baseUrl = '/api/inventory-management';
 
+  // Update Line 23
+  private baseUrl = `${environment.apiUrl}/api/inventory-management`;
   constructor(private http: HttpClient) { }
 
   /**
@@ -78,7 +81,8 @@ export class InventoryManagementService {
   addMenuItemToCatalog(menuItemPayload: { itemName: string; price: number; category: string }): Observable<any> {
     // Hits port 8080 to trigger your menu catalog insert routine safely [3.1]
   
-      return this.http.post<any>('/api/menu/add', menuItemPayload);
+     // Update Line 81 inside addMenuItemToCatalog()
+  return this.http.post<any>(`${environment.apiUrl}/api/menu/add`, menuItemPayload);
       
   }
   
