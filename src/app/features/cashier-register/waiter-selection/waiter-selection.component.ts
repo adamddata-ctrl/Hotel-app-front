@@ -34,7 +34,7 @@ export class WaiterSelectionComponent implements OnInit {
    * Note: The TenantInterceptor automatically handles attaching the X-Tenant-ID header.
    */
   fetchActiveWaiters(): void {
-    this.http.get<Waiter[]>(`${environment.apiUrl}/api/waiters/active`)
+    this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
       .subscribe({
         next: (data) => {
           this.waitersList = data;
@@ -71,7 +71,7 @@ export class WaiterSelectionComponent implements OnInit {
     if (!this.newWaiterName.trim()) return;
 
     const payload = { waiterName: this.newWaiterName };
-    this.http.post(`${environment.apiUrl}/api/waiters/create`, payload)
+    this.http.post(`${environment.apiUrl}/waiters/create`, payload)
       .subscribe({
         next: () => {
           this.toggleAddModal();
