@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-cashier-login',
@@ -12,7 +13,11 @@ export class CashierLoginComponent implements OnInit {
   pinBuffer: string = '';
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+ constructor(
+    private http: HttpClient, 
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
   const currentWorkspace = localStorage.getItem('active_tenant_id');
@@ -79,4 +84,25 @@ this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
     this.errorMessage = 'Invalid Cashier Security PIN. Please retry.';
     this.pinBuffer = '';
   }
+
+
+executeTestTenantSignup(): void {
+    const mockRegistrationData = {
+      username: 'PizzaOwnerAdmin',
+      pinCode: '4321'
+    };
+
+    console.log('Sending cloud registration payload to Render...');
+    this.authService.registerNewTenant(mockRegistrationData).subscribe({
+      next: (response) => {
+        alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
+        console.log('Server registration payload confirmed:', response);
+      },
+      error: (err) => {
+        console.error('Registration pipeline failed:', err);
+        alert('Error provisioning tenant: ' + err.message);
+          }
+    });
+  }
+
 }
