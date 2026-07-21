@@ -5,27 +5,26 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class TenantInterceptor implements HttpInterceptor {
 
-  constructor() {}
-
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // 1. Check if this is an authentication/registration request
-    if (request.url.includes('/auth/')) {
-      // Let it pass completely clean WITHOUT any X-Tenant-ID header
-      return next.handle(request);
-    }
+    const url = request.url.toLowerCase();
+
+    // HARDENED BYPASS CHECK: Matches /auth, register-tenant, or login paths completely case-insensitive
+    if (url.includes('/auth') || url.includes('register-tenant') || url.includes('/login')) {
+      console.log('🛡️ TenantInterceptor: Public route detected. Bypassing tenant header completely.');
+      return next.handle(request); 
+       }
+
+    // 2. Fetch the workspace token from browser storage for secure endpoints
     const activeTenantId = localStorage.getItem('active_tenant_id');
 
-    // 3. Clone the request and inject the tracking header expected by our Spring Boot backend
     if (activeTenantId) {
       const secureRequest = request.clone({
-        setHeaders: {
-          'X-Tenant-ID': activeTenantId
-        }
+        setHeaders: { 'X-Tenant-ID': activeTenantId }
       });
       return next.handle(secureRequest);
     }
 
-    // 4. Fallback if no tenant token is found in the browser session context yet
+    // Default fallback
     return next.handle(request);
   }
 }
