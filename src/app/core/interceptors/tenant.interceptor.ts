@@ -9,7 +9,7 @@ export class TenantInterceptor implements HttpInterceptor {
     const url = request.url.toLowerCase();
 
     // HARDENED BYPASS CHECK: Matches /auth, register-tenant, or login paths completely case-insensitive
-    if (url.includes('/auth') || url.includes('register-tenant') || url.includes('/login')) {
+    if (url.includes('/auth/') || url.includes('/login')) {
       console.log('🛡️ TenantInterceptor: Public route detected. Bypassing tenant header completely.');
       return next.handle(request); 
        }
