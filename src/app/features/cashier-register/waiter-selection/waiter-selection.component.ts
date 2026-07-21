@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+
 interface Waiter {
   id: number;
   waiterName: string;
@@ -12,8 +13,7 @@ interface Waiter {
   selector: 'app-waiter-selection',
   templateUrl: './waiter-selection.component.html',
   styleUrls: ['./waiter-selection.component.css']
-})
-
+  })
 export class WaiterSelectionComponent implements OnInit {
   waitersList: Waiter[] = [];
   errorMessage: string = '';
@@ -23,16 +23,11 @@ export class WaiterSelectionComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   /**
-   * Standard lifecycle hook fires the fetch routine automatically when the screen mounts
+   * Automatically executes the server data retrieval sequence when the UI page mounts.
    */
   ngOnInit(): void {
     this.fetchActiveWaiters();
   }
-
-   /**
-   * Pulls the active staff profiles from our Spring Boot endpoint.
-   * Note: The TenantInterceptor automatically handles attaching the X-Tenant-ID header.
-   */
   fetchActiveWaiters(): void {
     this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
       .subscribe({
@@ -40,14 +35,15 @@ export class WaiterSelectionComponent implements OnInit {
           this.waitersList = data;
         },
         error: (err) => {
-          this.errorMessage = 'Failed to load restaurant waiters. Please refresh.';
+          console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
+          this.errorMessage = 'Failed to load restaurant waiters. Please refresh the browser session.';
         }
       });
   }
 
   /**
-   * Saves the selection variables into the active browser memory context 
-   * and steps forward directly into the register checkout terminal interface.
+    * Tracks the chosen worker assignment metrics inside active browser cache memory
+   * and routes the workspace terminal view directly into the floor check order paths.
    */
   selectWaiter(waiter: Waiter): void {
     localStorage.setItem('selected_waiter_id', waiter.id.toString());
@@ -56,31 +52,32 @@ export class WaiterSelectionComponent implements OnInit {
   }
 
   /**
-   * Triggers the quick-add shortcut modal overlay
+   * Toggles the quick-insert shortcut pop-up interface overlay view state.
    */
   toggleAddModal(): void {
     this.showModal = !this.showModal;
     this.newWaiterName = '';
-  }
+    }
 
   /**
-   * Quick-inserts a new waiter profile into your MySQL database 
-   * in 3 seconds flat without leaving the screen workflow loop.
+   * Executes a direct outbound REST network stream to create a new worker row
+   * inside our production cloud MySQL database cluster.
    */
   submitNewWaiter(): void {
-    if (!this.newWaiterName.trim()) return;
+    if (!this.newWaiterName || !this.newWaiterName.trim()) return;
 
-    const payload = { waiterName: this.newWaiterName };
-    this.http.post(`${environment.apiUrl}/waiters/create`, payload)
+    const payload = { waiterName: this.newWaiterName.trim() };
+
+    this.http.post<Waiter>(`${environment.apiUrl}/waiters/create`, payload)
       .subscribe({
         next: () => {
           this.toggleAddModal();
-          this.fetchActiveWaiters(); // Refresh grid layout metrics automatically
+           this.fetchActiveWaiters(); // Refresh database arrays dynamically across the grid display block
         },
         error: (err) => {
-          this.errorMessage = 'Could not create waiter profile. Retry.';
+          console.error('FAILED TO PROVISION WAITER RECORD:', err);
+          this.errorMessage = 'Could not register staff member profile details. Try again.';
         }
-
-         });
+      });
   }
 }

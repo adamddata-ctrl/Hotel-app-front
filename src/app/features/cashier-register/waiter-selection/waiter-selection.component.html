@@ -13,8 +13,8 @@
     <h2>WHO IS ORDERING FOR THIS TABLE?</h2>
 
     <!-- Error Messaging Notification Context Banner -->
-    <div class="error-banner" *ngIf="errorMessage">
-       {{ errorMessage }}
+     <div class="error-banner" *ngIf="errorMessage">
+      {{ errorMessage }}
     </div>
 
     <!-- Responsive Multi-Tenant Large Card Grid System Layout -->
@@ -28,7 +28,7 @@
         <h3>{{ waiter.waiterName }}</h3>
         <span class="staff-id">Staff ID: #00{{ waiter.id }}</span>
       </div>
- <!-- Static Quick Action Trigger Card to Onboard Staff on the Fly -->
+       <!-- Static Quick Action Trigger Card to Onboard Staff on the Fly -->
       <div class="waiter-card add-card" (click)="toggleAddModal()">
         <div class="avatar-circle add-circle">+</div>
         <h3>ADD WAITER</h3>
@@ -43,7 +43,7 @@
     <div class="modal-card">
       <h3>Onboard New Service Waiter</h3>
       <p>Input staff legal operating profile name details:</p>
-        <!-- FIX: Added name attribute so structural property binding updates state instantly -->
+        <!-- STEP 1 FIX: Added the explicit name attribute here so [(ngModel)] works flawlessly -->
       <input 
         type="text" 
         [(ngModel)]="newWaiterName" 
@@ -58,8 +58,8 @@
           [disabled]="!newWaiterName || !newWaiterName.trim()" 
           (click)="submitNewWaiter()"
         >
-        CONFIRM ADD
-        </button>
+          CONFIRM ADD
+          </button>
       </div>
     </div>
   </div>
