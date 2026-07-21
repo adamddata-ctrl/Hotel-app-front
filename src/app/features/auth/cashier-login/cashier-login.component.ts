@@ -87,23 +87,22 @@ this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
 
 
 executeTestTenantSignup(): void {
-  // Clear out all experimental variables to match your exact Page 10 Java DTO fields
   const mockRegistrationData = {
-    username: 'PizzaOwnerAdmin',
-    pinCode: '4321',          // Matches 'private String pinCode;' case perfectly
-    fullName: 'Pizza Paradise Admin' // Matches 'private String fullName;' case perfectly
+    username: 'UniqueOwner88', // Changed to clear the duplicate database constraint
+    pinCode: '4321',
+    fullName: 'Pizza Paradise Admin'
   };
 
-  console.log('Sending clean, exact matching registration payload to Render...');
+  console.log('Sending clean, unique matching registration payload to Render...');
   this.authService.registerNewTenant(mockRegistrationData).subscribe({
     next: (response) => {
       alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
       console.log('Server registration payload confirmed:', response);
     },
-    error: (err) => { 
-       console.error('Registration pipeline failed:', err);
+    error: (err) => {
+      console.error('Registration pipeline failed:', err);
       alert('Error provisioning tenant: ' + err.message);
-    }
+       }
   });
 }
 
