@@ -87,22 +87,34 @@ this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
 
 
 executeTestTenantSignup(): void {
-    const mockRegistrationData = {
-      username: 'PizzaOwnerAdmin',
-      pinCode: '4321'
-    };
+  const mockRegistrationData = {
+    // Aligns with your username/fullName DTO setup
+    username: 'PizzaOwnerAdmin',
+    fullName: 'Pizza Paradise Admin',
+    
+    // Aligns with your restaurantName/email DTO setup
+    restaurantName: 'Pizza Paradise',
+    adminName: 'PizzaOwnerAdmin',
+    adminEmail: 'admin@pizzaparadise.com',
+    
+    // Aligns with both case variants of the pin/password
+    pinCode: '4321',
+    pincode: '4321',
+    adminPassword: '4321'
+  };
+console.log('Sending fully saturated cloud registration payload to Render...');
+  this.authService.registerNewTenant(mockRegistrationData).subscribe({
+    next: (response) => {
+      alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
+      console.log('Server registration payload confirmed:', response);
+    },
+    error: (err) => {
+      console.error('Registration pipeline failed:', err);
+      alert('Error provisioning tenant: ' + err.message);
+    }
+  });
+}
 
-    console.log('Sending cloud registration payload to Render...');
-    this.authService.registerNewTenant(mockRegistrationData).subscribe({
-      next: (response) => {
-        alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
-        console.log('Server registration payload confirmed:', response);
-      },
-      error: (err) => {
-        console.error('Registration pipeline failed:', err);
-        alert('Error provisioning tenant: ' + err.message);
-          }
-    });
-  }
+
 
 }
