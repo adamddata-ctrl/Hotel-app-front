@@ -80,21 +80,25 @@ export class CashierLoginComponent implements OnInit {
   }
 
   executeTestTenantSignup(): void {
-    const mockRegistrationData = {
-      username: 'UniqueOwner88',
-      pinCode: '4321',
-      fullName: 'Pizza Paradise Admin'
-    };
-     console.log('Sending clean, unique matching registration payload to Render...');
-    this.authService.registerNewTenant(mockRegistrationData).subscribe({
-      next: (response) => {
-        alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
-        console.log('Server registration payload confirmed:', response);
-      },
-      error: (err) => {
-        console.error('Registration pipeline failed:', err);
-        alert('Error provisioning tenant: ' + err.message);
-      }
-    });
-  }
+  // Generates a random number so the database entry is always unique
+  const randomId = Math.floor(Math.random() * 10000);
+
+  const mockRegistrationData = {
+    username: 'OwnerAdmin_' + randomId, // Becomes unique every click (e.g., OwnerAdmin_4821)
+    pinCode: '4321',
+    fullName: 'Pizza Paradise Admin'
+  };
+
+  console.log('Sending clean, dynamic matching registration payload to Render...');
+  this.authService.registerNewTenant(mockRegistrationData).subscribe({
+    next: (response) => { 
+      alert('SUCCESS! Permanent Tenant Created: ' + response.tenantId);
+      console.log('Server registration payload confirmed:', response);
+    },
+    error: (err) => {
+      console.error('Registration pipeline failed:', err);
+      alert('Error provisioning tenant: ' + err.message);
+    }
+  });
+}
 }
