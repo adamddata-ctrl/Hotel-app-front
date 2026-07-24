@@ -74,8 +74,9 @@ export class TenantSignupComponent {
       return false;
     }
 
-    if (this.signupData.password.length < 6) {
-      this.errorMessage = 'Manager Password must be at least 6 characters long.';
+   // FIX: Modified rule checks to enforce exactly 4 numeric characters for the back-office manager password
+    if (this.signupData.password.length !== 4 || isNaN(Number(this.signupData.password))) {
+      this.errorMessage = 'Manager Password must be exactly 4 numeric digits.';
       return false;
     }
 
