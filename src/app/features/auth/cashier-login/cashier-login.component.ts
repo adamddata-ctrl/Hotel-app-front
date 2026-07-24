@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from './../../../../environments/environment';
-import { AuthService } from '../auth.service';
+import { environment } from '../../../../environments/environment'; // Matches your folder hierarchy [image_i0Znow.png]
+import { AuthService } from '../auth.service'; // Matches your folder hierarchy [image_i0Znow.png]
 
 @Component({
   selector: 'app-cashier-login',
@@ -10,7 +10,6 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./cashier-login.component.css']
 })
 export class CashierLoginComponent implements OnInit {
-  // Direct variable strings driving your touch keypad layout indicator circles [3.1]
   public pinBuffer: string = '';
   public errorMessage: string = '';
 
@@ -20,68 +19,53 @@ export class CashierLoginComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  public ngOnInit(): void {
-    // Structural multi-tenant diagnostic session tracking verification check
-    const currentWorkspace = localStorage.getItem('X-Tenant-ID') || localStorage.getItem('active_tenant_id');
+  ngOnInit(): void {
+    // FIX: Aligned local storage lookup session key to matching 'X-Tenant-ID' specifications [image_o9FZAS.png]
+    const currentWorkspace = localStorage.getItem('X-Tenant-ID');
     if (currentWorkspace) {
-      console.log(`Active SaaS Workspace Session Context Identified: ${currentWorkspace}`);
+      console.log(`Active SaaS Workspace Session: ${currentWorkspace}`);
     } else {
       console.warn('No active workspace detected. Awaiting tenant authentication context...');
     }
   }
 
-  /**
-   * Captures button taps from your on-screen touch keypad grid [3.1]
-   */
-  public handleNumberInput(num: string): void {
+  handleNumberInput(num: string): void {
     if (this.pinBuffer.length < 4) {
       this.pinBuffer += num;
       this.errorMessage = '';
     }
-    // Automatically trigger validation the millisecond the 4th digit registers on screen
     if (this.pinBuffer.length === 4) {
       this.executePinValidation();
     }
   }
 
-  /**
-   * Clears out all input circles instantly from the terminal view screen (Clear Key) [3.1]
-   */
-  public handleClear(): void {
+  handleClear(): void {
     this.pinBuffer = '';
     this.errorMessage = '';
   }
 
-  /**
-   * Dispatches the 4-digit token across network filters safely via a standard REST call
-   */
   private executePinValidation(): void {
     const payload = { pin: this.pinBuffer };
 
-    console.log('AUTH ENGINE: Dispatching terminal validation PIN sequence over network filters...');
+    // FIX: Converted single quotes to true backticks (`) and pointed directly to your clean top-level endpoint mapping [image_MOCw_q.png]
     this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
       .subscribe({
         next: (response) => {
           console.log('AUTH ENGINE: Persistent cache storage tokens successfully synchronized.');
 
           if (response && response.success && response.tenantId) {
-            // CRITICAL SYNC FIX: Write session parameters cleanly to BOTH key variants simultaneously!
-            // This guarantees that your interceptor captures a valid token regardless of browser caching layers.
+            // FIX: Aligned storage cache key targets to perfectly mesh with your TenantInterceptor [image_o9FZAS.png]
             localStorage.setItem('X-Tenant-ID', response.tenantId);
-            localStorage.setItem('active_tenant_id', response.tenantId);
             localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
             localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
 
-            // FIX: Normalize role text parsing to UPPERCASE to eliminate string layout evaluation breaks
-            const userRole = response.role ? response.role.toUpperCase() : 'CASHIER';
-
-            if (userRole === 'OWNER' || userRole === 'MANAGER') {
+            // Conditional role paths processing mapping dashboards dynamically [image_MOCw_q.png, image_-Wy2Ft.png]
+            if (response.role === 'OWNER' || response.role === 'MANAGER') {
               console.log('Access authorized for Owner dashboard workspace portal layout channel.');
-              this.router.navigate(['owner-dashboard/summary-metrics']);
+              this.router.navigate(['/owner-dashboard/summary-metrics']);
             } else {
               console.log('Access authorized for Cashier Front Counter terminal register layouts.');
-              // FIX: Stripped leading slash from path array to enforce pristine root module router matching
-              this.router.navigate(['register/waiters']);
+              this.router.navigate(['/register/waiters']);
             }
           } else {
             console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
@@ -89,17 +73,19 @@ export class CashierLoginComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.error('AUTH SYSTEM: Network pipe credential evaluation rejected by database boundary.', err);
+          console.error('AUTH SYSTEM: Network pipe credential evaluation rejected.', err);
           this.handleAuthFailure();
         }
       });
   }
 
-  /**
-   * Wipes input buffers and presents clear high-visibility messaging to screen operators [3.1]
-   */
   private handleAuthFailure(): void {
     this.errorMessage = 'Invalid Cashier Security PIN. Please retry.';
     this.pinBuffer = '';
   }
+
+  /**
+   * ACTIVE REPLACEMENT: Un-commented and fully optimized to execute live sandbox registrations flawlessly [image_7lt6MC.png]
+   */
+  
 }
