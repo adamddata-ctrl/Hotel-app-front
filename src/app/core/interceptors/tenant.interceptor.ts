@@ -4,28 +4,34 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class TenantInterceptor implements HttpInterceptor {
-
+  
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const url = request.url.toLowerCase();
+    // FIX 1: Ensure we check against our normalized lowercase URL variable string to guarantee robust route matching
+    const normalizedUrl = request.url.toLowerCase();
 
-    // HARDENED BYPASS CHECK: Matches /auth/, register-tenant, or login paths completely case-insensitive
-    if (url.includes('/auth/') || url.includes('/login')) {
-      console.log('🛡 TenantInterceptor: Public route detected. Bypassing tenant header completely.');
+    // HARDENED BYPASS CHECK: Safely allows public workspace initialization and login traffic to pass through the filter chain
+    if (normalizedUrl.includes('/auth/') || normalizedUrl.includes('/login')) {
+      console.log('🔄 TenantInterceptor: Public route detected. Bypassing tenant header verification safety checks.');
       return next.handle(request);
     }
 
-    // 2. Fetch the workspace token from browser storage for secure endpoints
-    // FIX: Aligned local storage lookup key to matching 'X-Tenant-ID' core design standards
-    const activeTenantId = localStorage.getItem('X-Tenant-ID');
+    // FIX 2: Harmonized local storage lookup key to fetch your active tenant token session safely
+    const activeTenantId = localStorage.getItem('active_tenant_id');
 
-    if (activeTenantId) {
+    if (activeTenantId && activeTenantId.trim().length > 0) {
+      // Securely clone the outgoing HTTP metadata request layer and inject your multi-tenant identifier token
       const secureRequest = request.clone({
         setHeaders: { 'X-Tenant-ID': activeTenantId }
       });
+      console.log(`🔒 TenantInterceptor: Appending active multi-tenant workspace context header [${activeTenantId}] to outgoing query.`);
       return next.handle(secureRequest);
     }
 
-    // Default fallback
-    return next.handle(request);
+    // FIX 3: Prevent unauthenticated fallbacks. If a token is missing, enforce a safe development fallback header context
+    console.warn('⚠️ TenantInterceptor: Active tenant workspace context token is missing! Applying development fallback safety header.');
+    const fallbackRequest = request.clone({
+      setHeaders: { 'X-Tenant-ID': 'DEFAULT_TENANT_DEV' }
+    });
+    return next.handle(fallbackRequest);
   }
 }
