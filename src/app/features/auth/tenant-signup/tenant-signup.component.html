@@ -1,0 +1,79 @@
+<div class="signup-page-wrapper">
+  <div class="signup-card">
+    <div class="card-header">
+      <h2>SaaS Restaurant Provisioning Gateway</h2>
+      <p>Deploy an isolated multi-tenant database workspace partition instantly.</p>
+    </div>
+
+    <!-- Error Messaging Anchor -->
+    <div *ngIf="errorMessage" class="alert-banner">
+      ⚠️ {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onSignupSubmit()" #signupForm="ngForm" autocomplete="off">
+      
+      
+      <div class="form-group">
+        <label for="fullName">Restaurant / Brand Name</label>
+        <input 
+          type="text" 
+          id="fullName"
+          name="fullName"
+          [(ngModel)]="signupData.fullName" 
+          placeholder="e.g., Pizza Paradise Downtown" 
+          required />
+      </div>
+
+      <!-- Field 2: Administrative Login ID -->
+      <div class="form-group">
+        <label for="username">Owner / Manager Username</label>
+        <input 
+          type="text" 
+          id="username"
+          name="username"
+          [(ngModel)]="signupData.username" 
+          placeholder="e.g., admin_owner" 
+          required />
+      </div>
+
+      <!-- Field 3: Secure Back-Office Access Password -->
+      <div class="form-group">
+        <label for="password">Manager Password (Back-Office Dashboard)</label>
+        <input 
+          type="password" 
+          id="password"
+          name="password"
+          [(ngModel)]="signupData.password" 
+          placeholder="Minimum 6 complex characters" 
+          required />
+      </div>
+
+      <!-- Field 4: Rapid FOH Keypad Code -->
+      <div class="form-group">
+        <label for="pinCode">Default Cashier Access PIN (Front-Of-House Terminal)</label>
+        <input 
+          type="text" 
+          id="pinCode"
+          name="pinCode"
+          [(ngModel)]="signupData.pinCode" 
+          placeholder="Exactly 4 numeric digits (e.g., 4321)" 
+          maxlength="4"
+          required />
+      </div>
+
+      <!-- Action Submission Block -->
+      <button 
+        type="submit" 
+        class="submit-btn" 
+        [disabled]="isSubmitting || !signupForm.form.valid">
+        <span *ngIf="!isSubmitting">🚀 PROVISION INDEPENDENT LIVE WORKSPACE</span>
+        <span *ngIf="isSubmitting">⚙️ ALLOCATING SECURE DATABASE PARTITION...</span>
+      </button>
+
+    </form>
+    
+    <div class="card-footer">
+      <a routerLink="/login">← Abort registration and return to terminal login</a>
+    </div>
+  </div>
+</div>

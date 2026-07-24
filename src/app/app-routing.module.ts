@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CashierLoginComponent } from './features/auth/cashier-login/cashier-login.component';
@@ -14,6 +13,7 @@ import { authGuard } from './core/guards/auth.guards';
 import { tenantGuard } from './core/guards/tenant.guard';
 import { SalesChartComponent } from './features/owner-dashboard/sales-chart/sales-chart.component';
 import { MenuManagementComponent } from './features/owner-dashboard/menu-management/menu-management.component';
+import { TenantSignupComponent } from './features/auth/tenant-signup/tenant-signup.component';
 
 const routes: Routes = [
   // 1. Root route automatically mounts your touchscreen PIN pad display layout
@@ -22,14 +22,26 @@ const routes: Routes = [
     component: CashierLoginComponent 
   },
 
+ // FIX: Added the open public pathway to handle independent restaurant registration
+  {
+    path: 'register-tenant',
+    component: CashierLoginComponent 
+  },
 
 
-  // 2. Catch-all fallback redirects empty paths straight into the login component view
+
+ // 2. Catch-all fallback redirects empty paths straight into the login component view
   { 
     path: '', 
     redirectTo: 'login', 
     pathMatch: 'full' 
   },
+
+  // 2. Locate your routes array and swap the component reference securely
+{
+  path: 'register-tenant',
+  component: TenantSignupComponent // Swapped from CashierLoginComponent to lock in the page barrier
+},
   
   // 3. High-Security Environment: Fully protected checkout pathways
   { 

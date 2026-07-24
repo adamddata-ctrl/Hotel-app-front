@@ -86,7 +86,8 @@ export class CashierLoginComponent implements OnInit {
   const mockRegistrationData = {
     username: 'OwnerAdmin_' + randomId, // Becomes unique every click (e.g., OwnerAdmin_4821)
     pinCode: '4321',
-    fullName: 'Pizza Paradise Admin'
+    fullName: 'Pizza Paradise Admin',
+    password: 'MockSecurePassword123!' 
   };
 
   console.log('Sending clean, dynamic matching registration payload to Render...');

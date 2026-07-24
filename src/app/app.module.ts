@@ -17,6 +17,7 @@ import { HttpErrorInterceptor } from './core/interceptors/http-error.interceptor
 import { KitchenScreenComponent } from './features/kitchen-screen/kitchen-screen.component';
 
 import { InventoryManagementComponent } from './features/owner-dashboard/inventory-management/inventory-management.component';
+import { TenantSignupComponent } from './features/auth/tenant-signup/tenant-signup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { InventoryManagementComponent } from './features/owner-dashboard/invento
     MenuManagementComponent,
     KitchenScreenComponent,
   
-    InventoryManagementComponent
+    InventoryManagementComponent,
+       TenantSignupComponent
   ],
   imports: [
     BrowserModule,
