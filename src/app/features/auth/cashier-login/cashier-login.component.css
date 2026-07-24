@@ -129,3 +129,29 @@
   25% { transform: translateX(-4px); }
   75% { transform: translateX(4px); }
 }
+
+
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.signup-prompt {
+  color: #8b949e;
+  font-size: 14px;
+}
+
+.signup-link {
+  color: #58a6ff;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 5px;
+  transition: color 0.2s;
+}
+
+.signup-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}

@@ -79,6 +79,8 @@ export class CashierLoginComponent implements OnInit {
     this.pinBuffer = '';
   }
 
+  /*
+
   executeTestTenantSignup(): void {
   // Generates a random number so the database entry is always unique
   const randomId = Math.floor(Math.random() * 10000);
@@ -101,5 +103,5 @@ export class CashierLoginComponent implements OnInit {
       alert('Error provisioning tenant: ' + err.message);
     }
   });
-}
+} */
 }
