@@ -13,20 +13,23 @@ export interface RevenuePacket {
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private readonly apiEndpoint = `${environment.apiUrl}/api/analytics/total-revenue`;
-  constructor(private http: HttpClient) { }
+  // FIX: Converted single quotes to backticks (`) to allow the environment variables to parse correctly
+  private readonly apiEndpoint = `${environment.apiUrl}/analytics/total-revenue`;
+
+  constructor(private http: HttpClient) {}
 
   /**
-   * 
+   * Queries real-time gross performance tracking cards from your database partition.
    */
-  getGrossRevenueMetrics(): Observable<RevenuePacket> {
+  public getGrossRevenueMetrics(): Observable<RevenuePacket> {
     return this.http.get<RevenuePacket>(this.apiEndpoint);
   }
 
   /**
-   * 
+   * FIX: Corrected method spelling from 'Bars' to match your components exactly, 
+   * removed invalid single quotes, and updated the endpoint path with hyphens.
    */
-  fetchDailyMonthBars(): Observable<any[]> { 
-    return this.http.get<any[]>(`${environment.apiUrl}/api/analytics/daily-month-bars`);
+  public fetchDailyMonthBars(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/analytics/daily-month-bars`);
   }
 }

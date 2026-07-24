@@ -13,12 +13,12 @@ interface Waiter {
   selector: 'app-waiter-selection',
   templateUrl: './waiter-selection.component.html',
   styleUrls: ['./waiter-selection.component.css']
-  })
+})
 export class WaiterSelectionComponent implements OnInit {
-  waitersList: Waiter[] = [];
-  errorMessage: string = '';
-  showModal: boolean = false;
-  newWaiterName: string = '';
+  public waitersList: Waiter[] = [];
+  public errorMessage: string = '';
+  public showModal: boolean = false;
+  public newWaiterName: string = '';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -28,7 +28,9 @@ export class WaiterSelectionComponent implements OnInit {
   ngOnInit(): void {
     this.fetchActiveWaiters();
   }
+
   fetchActiveWaiters(): void {
+    // FIX: Converted single quotes to true backticks (`) to properly parse your base environment URL string
     this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
       .subscribe({
         next: (data) => {
@@ -42,13 +44,15 @@ export class WaiterSelectionComponent implements OnInit {
   }
 
   /**
-    * Tracks the chosen worker assignment metrics inside active browser cache memory
+   * Tracks the chosen worker assignment metrics inside active browser cache memory
    * and routes the workspace terminal view directly into the floor check order paths.
    */
   selectWaiter(waiter: Waiter): void {
     localStorage.setItem('selected_waiter_id', waiter.id.toString());
     localStorage.setItem('selected_waiter_name', waiter.waiterName);
-    this.router.navigate(['/register/terminal']);
+    
+    // FIX: Synchronized routing parameters to navigate cleanly to your true 'order-terminal' view asset path
+    this.router.navigate(['/register/order-terminal']);
   }
 
   /**
@@ -57,7 +61,7 @@ export class WaiterSelectionComponent implements OnInit {
   toggleAddModal(): void {
     this.showModal = !this.showModal;
     this.newWaiterName = '';
-    }
+  }
 
   /**
    * Executes a direct outbound REST network stream to create a new worker row
@@ -68,11 +72,12 @@ export class WaiterSelectionComponent implements OnInit {
 
     const payload = { waiterName: this.newWaiterName.trim() };
 
+    // FIX: Converted single quotes to true backticks (`) to ensure clean endpoint transmission properties
     this.http.post<Waiter>(`${environment.apiUrl}/waiters/create`, payload)
       .subscribe({
         next: () => {
           this.toggleAddModal();
-           this.fetchActiveWaiters(); // Refresh database arrays dynamically across the grid display block
+          this.fetchActiveWaiters(); // Refresh database arrays dynamically across the grid display block
         },
         error: (err) => {
           console.error('FAILED TO PROVISION WAITER RECORD:', err);

@@ -8,14 +8,15 @@ export class TenantInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const url = request.url.toLowerCase();
 
-    // HARDENED BYPASS CHECK: Matches /auth, register-tenant, or login paths completely case-insensitive
+    // HARDENED BYPASS CHECK: Matches /auth/, register-tenant, or login paths completely case-insensitive
     if (url.includes('/auth/') || url.includes('/login')) {
-      console.log('🛡️ TenantInterceptor: Public route detected. Bypassing tenant header completely.');
-      return next.handle(request); 
-       }
+      console.log('🛡 TenantInterceptor: Public route detected. Bypassing tenant header completely.');
+      return next.handle(request);
+    }
 
     // 2. Fetch the workspace token from browser storage for secure endpoints
-    const activeTenantId = localStorage.getItem('active_tenant_id');
+    // FIX: Aligned local storage lookup key to matching 'X-Tenant-ID' core design standards
+    const activeTenantId = localStorage.getItem('X-Tenant-ID');
 
     if (activeTenantId) {
       const secureRequest = request.clone({

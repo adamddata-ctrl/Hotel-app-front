@@ -20,8 +20,6 @@ export class DashboardHomeComponent implements OnInit {
     private analyticsService: AnalyticsService
   ) {}
 
-  
-
 
  ngOnInit(): void {
     // 1. Pull the logged-in owner profile data context from session memory if present
@@ -54,19 +52,13 @@ export class DashboardHomeComponent implements OnInit {
         }
       });
 
-      
-
-
-
-
+    
     } catch (crashException) {
       console.error('CRITICAL ERROR: Exception caught during analytics sync execution.', crashException);
       this.grossRevenue = 0.00;
       this.isLoadingSales = false;
     }
   }
-
-
 
 
   executeLogoutWorkflow(): void {

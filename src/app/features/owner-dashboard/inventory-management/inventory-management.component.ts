@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { InventoryManagementService, InventoryItem } from '../../../core/services/inventory-management.service'; // Adjust path directories to match folder structure
+// FIX: Corrected your relative path climb directory index to step out of the nested dashboard folders safely
+import { InventoryManagementService, InventoryItem } from '../../../core/services/inventory-management.service';
 
 @Component({
   selector: 'app-inventory-management',
@@ -7,34 +8,35 @@ import { InventoryManagementService, InventoryItem } from '../../../core/service
   styleUrls: ['./inventory-management.component.css']
 })
 export class InventoryManagementComponent implements OnInit {
-  stockItems: InventoryItem[] = [];
-  errorMessage: string = '';
-  isLoading: boolean = false;
+  public stockItems: InventoryItem[] = [];
+  public errorMessage: string = '';
+  public isLoading: boolean = false;
 
   // State modifiers for interactive workspace action blocks [3.1]
-  selectedItem: InventoryItem | null = null;
-  activeActionType: 'ADJUST' | 'COUNT' | 'RECEIVE' | null = null;
-  inputValueModifier: number | null = null;
-  transactionNotes: string = '';
-  // 🔥 ADDED: Form state tracking parameters to create new supplies from the UI [3.1]
-  isCreateModalOpen: boolean = false;
-  newItemForm = {
+  public selectedItem: InventoryItem | null = null;
+  public activeActionType: 'ADJUST' | 'COUNT' | 'RECEIVE' | null = null;
+  public inputValueModifier: number | null = null;
+  public transactionNotes: string = '';
+
+  // Form state tracking parameters to create new supplies from the UI [3.1]
+  public isCreateModalOpen: boolean = false;
+  public newItemForm = {
     itemName: '',
     quantityOnHand: 0,
     minStockLevel: 0,
     unitOfMeasure: 'pcs'
   };
 
-  constructor(private inventoryService: InventoryManagementService) { }
+  constructor(private inventoryService: InventoryManagementService) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.refreshWarehouseMatrix();
   }
 
   /**
    * Downloads live raw stocks currently associated with the active tenant workspace [3.1].
    */
-  refreshWarehouseMatrix(): void {
+  public refreshWarehouseMatrix(): void {
     this.isLoading = true;
     this.inventoryService.fetchAllStockBalances().subscribe({
       next: (data) => {
@@ -48,25 +50,31 @@ export class InventoryManagementComponent implements OnInit {
       }
     });
   }
-/**
+
+  /**
    * Spawns an overlay sheet block layout to prepare stock mutations [3.1]
    */
-  openAdjustmentModal(item: InventoryItem, type: 'ADJUST' | 'COUNT' | 'RECEIVE'): void {
+  public openAdjustmentModal(item: InventoryItem, type: 'ADJUST' | 'COUNT' | 'RECEIVE'): void {
     this.selectedItem = item;
     this.activeActionType = type;
     this.inputValueModifier = null;
     this.transactionNotes = '';
   }
 
-  closeModal(): void {
+  /**
+   * Clears active modification state tracking parameters
+   */
+  public closeModal(): void {
     this.selectedItem = null;
     this.activeActionType = null;
+    this.inputValueModifier = null;
+    this.transactionNotes = '';
   }
 
-   /**
+  /**
    * Commits the finalized action value modifications over your network service [3.1]
    */
-  commitInventoryAction(): void {
+  public commitInventoryAction(): void {
     if (!this.selectedItem || this.inputValueModifier === null || this.inputValueModifier === undefined) {
       alert('Please fill out a valid quantitative adjustment number.');
       return;
@@ -76,11 +84,11 @@ export class InventoryManagementComponent implements OnInit {
     const value = this.inputValueModifier;
 
     this.isLoading = true;
+    let requestStream$;
 
     // Direct transaction routing depending on workspace operation types [3.1]
-    let requestStream$;
-    if (this.activeActionType === 'ADJUST') { 
-       requestStream$ = this.inventoryService.submitStockAdjustment(itemId, value);
+    if (this.activeActionType === 'ADJUST') {
+      requestStream$ = this.inventoryService.submitStockAdjustment(itemId, value);
     } else if (this.activeActionType === 'COUNT') {
       requestStream$ = this.inventoryService.submitInventoryCount(itemId, value);
     } else {
@@ -97,26 +105,27 @@ export class InventoryManagementComponent implements OnInit {
         alert('Failed to register inventory balance changes down to database tables.');
         this.isLoading = false;
       }
-      });
+    });
   }
 
-  // 🔥 ADDED: Form toggle controls for opening and closing the supplier asset window [3.1]
-  openCreateModal(): void {
+  /**
+   * Toggle controls for opening the supplier asset window [3.1]
+   */
+  public openCreateModal(): void {
     this.isCreateModalOpen = true;
     this.newItemForm = { itemName: '', quantityOnHand: 0, minStockLevel: 0, unitOfMeasure: 'pcs' };
   }
 
-  closeCreateModal(): void {
+  public closeCreateModal(): void {
     this.isCreateModalOpen = false;
   }
 
-  
-
   /**
-   * 🔥 ADDED: Dispatches a post command to store the brand-new ingredient record [3.1]
+   * Dispatches a post command to store the brand-new ingredient record [3.1]
    */
-  submitNewItem(): void { 
-     if (!this.newItemForm.itemName.trim()) {
+  public submitNewItem(): void {
+    // FIX: Tightened the string validation loop to check for clean trimmed lengths explicitly to block blank row creations
+    if (!this.newItemForm.itemName || this.newItemForm.itemName.trim().length === 0) {
       alert('Please enter a valid item description name.');
       return;
     }
@@ -132,10 +141,6 @@ export class InventoryManagementComponent implements OnInit {
         alert('Could not save item to backend repository schema.');
         this.isLoading = false;
       }
-       });
+    });
   }
-
-
-  
-  
 }

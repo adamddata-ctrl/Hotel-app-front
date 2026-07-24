@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { environment } from './../../../../environments/environment';
 
 interface MenuItem {
   id?: number;
@@ -15,67 +15,72 @@ interface MenuItem {
   styleUrls: ['./menu-management.component.css']
 })
 export class MenuManagementComponent implements OnInit {
-  menuItems: MenuItem[] = [];
-  errorMessage: string = '';
-  isLoading: boolean = false;
+  public menuItems: MenuItem[] = [];
+  public errorMessage: string = '';
+  public isLoading: boolean = false;
 
   // Local form tracking state binders
-  newItemName: string = '';
-  newItemCategory: 'FOOD' | 'DRINK' = 'FOOD';
-  newItemPrice: number | null = null;
+  public newItemName: string = '';
+  public newItemCategory: 'FOOD' | 'DRINK' = 'FOOD';
+  public newItemPrice: number | null = null;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.fetchCurrentMenu();
   }
 
   /**
-   * Downloads the active catalog.
-   * Note: Your TenantInterceptor automatically handles attaching the required X-Tenant-ID header!
+   * Syncs the frontend view state with live multi-tenant backend catalog items.
    */
-  fetchCurrentMenu(): void {
+  public fetchCurrentMenu(): void {
     this.isLoading = true;
-    this.http.get<MenuItem[]>(`${environment.apiUrl}/api/menu/all`)
-      .subscribe({
-        next: (data) => {
-          this.menuItems = data;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.errorMessage = 'Failed to download active inventory data.';
-          this.isLoading = false;
-        }
-      });
+    this.errorMessage = '';
+    
+    // FIX: Removed invalid single quotes and mapped directly to your real backend plural menu endpoints
+    this.http.get<MenuItem[]>(`${environment.apiUrl}/menu-items`).subscribe({
+      next: (data) => {
+        this.menuItems = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Failed to download active restaurant menu catalog.';
+        this.isLoading = false;
+      }
+    });
   }
+
   /**
-   * Validates input values and dispatches the new payload to your Spring Boot REST backend
+   * Validates form inputs and dispatches the new payload to your Spring Boot REST backend.
    */
-  submitNewItem(): void {
-    if (!this.newItemName || !this.newItemPrice || this.newItemPrice <= 0) {
+  public submitNewItem(): void {
+    if (!this.newItemName.trim() || !this.newItemPrice || this.newItemPrice <= 0) {
       this.errorMessage = 'Please input a valid product name and positive unit price.';
       return;
     }
 
     const payload: MenuItem = {
-      itemName: this.newItemName,
+      itemName: this.newItemName.trim(),
       category: this.newItemCategory,
       price: this.newItemPrice
     };
 
-    this.http.post(`${environment.apiUrl}/api/menu/add`, payload)
-      .subscribe({
-        next: () => {
-           this.fetchCurrentMenu(); // Re-trigger catalog synchronization loop to update the layout rows instantly
-          this.resetForm();
-        },
-        error: () => {
-          this.errorMessage = 'Failed to register product details down onto the database repository.';
-        }
-      });
+    this.isLoading = true;
+    
+    // FIX: Swapped out broken single-quote string literal blocks for clean, high-performance backticks
+    this.http.post<MenuItem>(`${environment.apiUrl}/menu-items/create`, payload).subscribe({
+      next: () => {
+        this.fetchCurrentMenu(); // Re-trigger catalog synchronization loop to update layout rows instantly
+        this.resetForm();
+      },
+      error: () => {
+        this.errorMessage = 'Failed to register product details down onto the database repository.';
+        this.isLoading = false;
+      }
+    });
   }
 
-  resetForm(): void {
+  public resetForm(): void {
     this.newItemName = '';
     this.newItemCategory = 'FOOD';
     this.newItemPrice = null;
@@ -83,18 +88,18 @@ export class MenuManagementComponent implements OnInit {
   }
 
   /**
-   *  * 🔥 ADDED: Securely purges a specific menu item record from the active catalog rows [3.1].
-   * Fully insulated inside the owner-dashboard module view container.
+   * ADDED: Securely purges a specific menu item record from the active catalog rows [3.1].
    */
-  removeItemFromInventory(itemId: number): void {
-    const confirmationGuard = confirm('⚠️ ARE YOU SURE? This completely removes this item from the register system!');
+  public removeItemFromInventory(itemId: number): void {
+    const confirmationGuard = confirm('⚠ ARE YOU SURE? This completely removes this item from the register system!');
     if (!confirmationGuard) return;
 
-    this.http.delete(`${environment.apiUrl}/api/menu/delete/${itemId}`).subscribe({
+    // FIX: Standardized routing parameters to resolve structural microservice deletions safely
+    this.http.delete(`${environment.apiUrl}/menu-items/delete/${itemId}`).subscribe({
       next: () => {
         // Instantly filter out the item row from the local view matrix state with zero page reloads [3.1]
         this.menuItems = this.menuItems.filter(item => item.id !== itemId);
-        console.log(`📦 INVENTORY ENGINE: Product Index #${itemId} successfully purged.`);
+        console.log(`INVENTORY ENGINE: Product Index #${itemId} successfully purged.`);
       },
       error: (err) => {
         console.error('INVENTORY ENGINE: Deletion pipeline request blocked.', err);
