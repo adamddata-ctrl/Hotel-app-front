@@ -30,30 +30,34 @@ export class TenantSignupComponent {
    * Fires when the independent restaurant clicks the registration button.
    */
   public onSignupSubmit(): void {
-    if (!this.validateFormInputs()) {
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.errorMessage = '';
-
-    console.log('Dispatching dynamic SaaS workspace registration details...');
-
-    this.authService.registerNewTenant(this.signupData).subscribe({
-      next: (response) => {
-        this.isSubmitting = false;
-        alert(`SUCCESS! Independent Workspace Created.\n\nYour Unique Tenant ID is: ${response.tenantId}\n\nPlease secure this token!`);
-        
-        // Dynamic navigation to clear context and push user to the fresh terminal screen
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        console.error('Workspace registration pipeline failed:', err);
-        this.errorMessage = err.error?.message || 'Could not provision isolated workspace. Please verify fields and retry.';
-      }
-    });
+  if (!this.validateFormInputs()) {
+    return;
   }
+
+  // 1. ABSOLUTE FIXED RECOVERY: Completely clear any residual session tokens 
+  // so the network interceptor can NEVER tag old headers onto this public sign-up call
+  localStorage.clear();
+  sessionStorage.clear();
+
+  this.isSubmitting = true;
+  this.errorMessage = '';
+
+  console.log('Dispatching clean, isolated SaaS workspace registration payload...');
+
+  this.authService.registerNewTenant(this.signupData).subscribe({
+    next: (response) => {
+      this.isSubmitting = false;
+      alert(`SUCCESS! Independent Workspace Created.\n\nYour Unique Tenant ID is: ${response.tenantId}`);
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      this.isSubmitting = false;
+      console.error('Workspace registration pipeline failed:', err);
+      this.errorMessage = err.error?.message || 'Could not provision isolated workspace. Please retry.';
+    }
+  });
+}
+    
 
   /**
    * Simple client-side constraints validation layer
