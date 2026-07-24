@@ -1,14 +1,25 @@
+src/app/features/auth/tenant-signup/tenant-signup.component.csscss/* Force the master Angular component host node to occupy the full screen context */
+:host {
+  display: block;
+  width: 100% !important;
+  min-height: 100vh !important;
+  background-color: #12141c !important;
+}
+
+/* Updated Master Layout Container Workspace with explicit host overrides */
 .signup-page-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #12141c;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  background-color: #12141c !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   box-sizing: border-box;
 }
 
+/* Your clean original signup card frame layout definitions */
 .signup-card {
   background: #1c1e29;
   border: 1px solid #2d3142;
