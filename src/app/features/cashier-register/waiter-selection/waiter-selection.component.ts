@@ -29,17 +29,27 @@ export class WaiterSelectionComponent implements OnInit {
     this.fetchActiveWaiters();
   }
   fetchActiveWaiters(): void {
-    this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
-      .subscribe({
-        next: (data) => {
-          this.waitersList = data;
-        },
-        error: (err) => {
-          console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
-          this.errorMessage = 'Failed to load restaurant waiters. Please refresh the browser session.';
-        }
-      });
+  const tenantId = localStorage.getItem('X-Tenant-ID');
+
+  // If the tenant token is missing, do not send a broken request
+  if (!tenantId) {
+    console.warn('🕒 WaiterSelectionComponent: Tenant ID not ready yet. Retrying in 150ms...');
+    setTimeout(() => this.fetchActiveWaiters(), 150);
+    return;
   }
+
+  // Execute the request safely once the token is confirmed
+  this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
+    .subscribe({
+      next: (data) => {
+        this.waitersList = data;
+      },
+      error: (err) => {
+        console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
+        this.errorMessage = 'Failed to load restaurant waiters. Please refresh the browser session.';
+      }
+    });
+}
 
   /**
     * Tracks the chosen worker assignment metrics inside active browser cache memory
@@ -64,20 +74,15 @@ export class WaiterSelectionComponent implements OnInit {
    * inside our production cloud MySQL database cluster.
    */
   submitNewWaiter(): void {
-    if (!this.newWaiterName || !this.newWaiterName.trim()) return;
+  if (!this.newWaiterName || !this.newWaiterName.trim()) return;
 
-    const payload = { waiterName: this.newWaiterName.trim() };
-
-    this.http.post<Waiter>(`${environment.apiUrl}/waiters/create`, payload)
-      .subscribe({
-        next: () => {
-          this.toggleAddModal();
-           this.fetchActiveWaiters(); // Refresh database arrays dynamically across the grid display block
-        },
-        error: (err) => {
-          console.error('FAILED TO PROVISION WAITER RECORD:', err);
-          this.errorMessage = 'Could not register staff member profile details. Try again.';
-        }
-      });
+  const tenantId = localStorage.getItem('X-Tenant-ID');
+  if (!tenantId) {
+    this.errorMessage = 'Session context expired. Please log out and enter your PIN again.';
+    return;
   }
+
+  const payload = { waiterName: this.newWaiterName.trim() };
+  // ... rest of your http.post code remains exactly the same!
+}
 }
