@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const tenantGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const activeTenantId = localStorage.getItem('active_tenant_id');
+  const activeTenantId = localStorage.getItem('X-Tenant-ID');
 
   // If an active restaurant workspace ID exists in memory, allow passage
   if (activeTenantId && activeTenantId.trim() !== '') {

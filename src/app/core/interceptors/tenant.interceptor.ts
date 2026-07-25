@@ -16,8 +16,8 @@ export class TenantInterceptor implements HttpInterceptor {
     }
 
     // FIX 2: Harmonized local storage lookup key to fetch your active tenant token session safely
-    const activeTenantId = localStorage.getItem('active_tenant_id');
-
+   // const activeTenantId = localStorage.getItem('active_tenant_id');
+    const activeTenantId = localStorage.getItem('X-Tenant-ID');
     if (activeTenantId && activeTenantId.trim().length > 0) {
       // Securely clone the outgoing HTTP metadata request layer and inject your multi-tenant identifier token
       const secureRequest = request.clone({
