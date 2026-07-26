@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { TenantRegistrationDto } from '../tenant-registration.model'; // Cleanly imports your updated model file!
-
 @Injectable({
   providedIn: 'root'
 })
@@ -25,4 +24,20 @@ export class AuthService {
       })
     );
   }
+
+// Inside src/app/core/services/auth.service.ts below registerNewTenant
+loginCashier(pin: string): Observable<any> {
+  return this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, { pin }).pipe(
+    tap(response => {
+      if (response && response.tenantId) {
+        // Enforce immediate, synchronous local storage commitment
+        localStorage.setItem('X-Tenant-ID', response.tenantId);
+        localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
+        localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
+        console.log('🔒 AUTH SERVICE: Core tenant context locked and synced:', response.tenantId);
+      }
+    })
+  );
+}
+
 }

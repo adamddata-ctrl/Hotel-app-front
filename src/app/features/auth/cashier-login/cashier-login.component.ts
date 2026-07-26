@@ -45,39 +45,36 @@ export class CashierLoginComponent implements OnInit {
   }
 
   private executePinValidation(): void {
-    const payload = { pin: this.pinBuffer };
+  const payload = { pin: this.pinBuffer };
+  this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
+  .subscribe({
+    next: (response) => {
+      console.log('AUTH ENGINE: Persistent cache storage tokens successfully synchronized.');
+      
+      if (response && response.success && response.tenantId) {
+        localStorage.setItem('X-Tenant-ID', response.tenantId);
+        localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
+        localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
 
-    // FIX: Converted single quotes to true backticks (`) and pointed directly to your clean top-level endpoint mapping [image_MOCw_q.png]
-    this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
-      .subscribe({
-        next: (response) => {
-          console.log('AUTH ENGINE: Persistent cache storage tokens successfully synchronized.');
-
-          if (response && response.success && response.tenantId) {
-            // FIX: Aligned storage cache key targets to perfectly mesh with your TenantInterceptor [image_o9FZAS.png]
-            localStorage.setItem('X-Tenant-ID', response.tenantId);
-            localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
-            localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
-
-            // Conditional role paths processing mapping dashboards dynamically [image_MOCw_q.png, image_-Wy2Ft.png]
-            if (response.role === 'OWNER' || response.role === 'MANAGER') {
-              console.log('Access authorized for Owner dashboard workspace portal layout channel.');
-              this.router.navigate(['/owner-dashboard/summary-metrics']);
-            } else {
-              console.log('Access authorized for Cashier Front Counter terminal register layouts.');
-              this.router.navigate(['/register/waiters']);
-            }
-          } else {
-            console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
-            this.handleAuthFailure();
-          }
-        },
-        error: (err) => {
-          console.error('AUTH SYSTEM: Network pipe credential evaluation rejected.', err);
-          this.handleAuthFailure();
+        // 🚀 THE FIX: Pass the tenant ID explicitly through the router state metadata!
+        if (response.role === 'OWNER' || response.role === 'MANAGER') {
+          console.log('Access authorized for Owner dashboard workspace portal layout channel.');
+          this.router.navigate(['/owner-dashboard/summary-metrics'], { state: { tenantId: response.tenantId } });
+        } else {
+          console.log('Access authorized for Cashier Front Counter terminal register layouts.');
+          this.router.navigate(['/register/waiters'], { state: { tenantId: response.tenantId } });
         }
-      });
-  }
+      } else {
+        console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
+        this.handleAuthFailure();
+      }
+    },
+    error: (err) => {
+      console.error('AUTH SYSTEM: Network pipe credential evaluation rejected.', err);
+      this.handleAuthFailure();
+    }
+  });
+}
 
   private handleAuthFailure(): void {
     this.errorMessage = 'Invalid Cashier Security PIN. Please retry.';
