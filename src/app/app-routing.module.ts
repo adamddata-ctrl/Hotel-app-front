@@ -35,10 +35,10 @@ const routes: Routes = [
 
   // 2. Front-Counter POS Register Workstations
   {
-    path: 'register/waiters',
+     path: 'register/waiters/:tenantId',
     component: WaiterSelectionComponent,
     canActivate: [tenantGuard, authGuard],
-    resolve: { tenantContext: WorkspaceResolver } 
+   
   },
   {
     path: 'register/terminal',

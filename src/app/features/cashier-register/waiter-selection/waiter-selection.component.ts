@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // 🚀 Added ActivatedRoute here
 import { environment } from '../../../../environments/environment';
 
 interface Waiter {
@@ -20,40 +20,49 @@ export class WaiterSelectionComponent implements OnInit {
   showModal: boolean = false;
   newWaiterName: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {
-    // 🚀 READ SYSTEM ROUTER STATE INSTANTLY ON INSTANTIATION:
-    // Captures the token before ngOnInit or interceptors run background queries
-    const navigation = this.router.getCurrentNavigation();
-    const passedTenantId = navigation?.extras.state?.['tenantId'];
-    if (passedTenantId) {
-      localStorage.setItem('X-Tenant-ID', passedTenantId);
+  // 🚀 Updated constructor to inject ActivatedRoute cleanly
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient, 
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // 🚀 STEP 1: Capture the live workspace parameter token directly from the active browser URL path
+    const urlTenantId = this.route.snapshot.paramMap.get('tenantId');
+
+    if (urlTenantId && urlTenantId.trim() !== '' && urlTenantId !== 'DEFAULT_TENANT_DEV') {
+      // Synchronize browser storage instantly to keep outbound interceptor headers solid
+      localStorage.setItem('X-Tenant-ID', urlTenantId);
+      this.fetchActiveWaiters();
+    } else {
+      console.error('❌ WAITER SELECTION: Missing tenant identifier inside the route pathway.');
+      this.errorMessage = 'Invalid or missing restaurant workspace identifier. Please log in again.';
     }
   }
 
-  ngOnInit(): void {
-    this.fetchActiveWaiters();
+  fetchActiveWaiters(): void {
+    const tenantId = localStorage.getItem('X-Tenant-ID');
+
+    if (!tenantId) {
+      this.errorMessage = 'Tenant security context missing. Please log in again.';
+      return;
+    }
+
+    // Fire the network query safely with zero timing delays or loops
+    this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
+      .subscribe({
+        next: (data) => {
+          this.waitersList = data;
+          this.errorMessage = ''; // Clear past errors
+        },
+        error: (err) => {
+          console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
+          this.errorMessage = 'Failed to load restaurant waiters. Please refresh the browser session.';
+        }
+      });
   }
 
- fetchActiveWaiters(): void {
-  // Pull a fresh read from the browser storage disk right now
-  const tenantId = localStorage.getItem('X-Tenant-ID');
-
-  // If the token isn't fully written yet, check again in 150ms
-  
-
-  // Executes safely ONLY when a valid token is found and verified
-  this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
-    .subscribe({
-      next: (data) => {
-        this.waitersList = data;
-        this.errorMessage = ''; 
-      },
-      error: (err) => {
-        console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
-        this.errorMessage = 'Failed to load restaurant waiters. Please refresh.';
-      }
-    });
-}
   selectWaiter(waiter: Waiter): void {
     localStorage.setItem('selected_waiter_id', waiter.id.toString());
     localStorage.setItem('selected_waiter_name', waiter.waiterName);
