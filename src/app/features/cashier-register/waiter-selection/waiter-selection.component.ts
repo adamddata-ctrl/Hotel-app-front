@@ -39,11 +39,7 @@ export class WaiterSelectionComponent implements OnInit {
   const tenantId = localStorage.getItem('X-Tenant-ID');
 
   // If the token isn't fully written yet, check again in 150ms
-  if (!tenantId || tenantId === 'DEFAULT_TENANT_DEV') {
-    console.warn('🕒 Tenant context settling... Stalling network pipeline 150ms.');
-    setTimeout(() => this.fetchActiveWaiters(), 150);
-    return;
-  }
+  
 
   // Executes safely ONLY when a valid token is found and verified
   this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)

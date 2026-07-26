@@ -20,6 +20,7 @@ import { InventoryManagementComponent } from './features/owner-dashboard/invento
 // High-Security Dynamic Multi-Tenant Access Control Guards
 import { authGuard } from './core/guards/auth.guards';
 import { tenantGuard } from './core/guards/tenant.guard';
+import { WorkspaceResolver } from './core/guards/workspace.resolver';
 
 const routes: Routes = [
   // 1. Core Authentication Entry Pathways (Duplicates completely purged)
@@ -36,7 +37,8 @@ const routes: Routes = [
   {
     path: 'register/waiters',
     component: WaiterSelectionComponent,
-    canActivate: [tenantGuard, authGuard]
+    canActivate: [tenantGuard, authGuard],
+    resolve: { tenantContext: WorkspaceResolver } 
   },
   {
     path: 'register/terminal',
