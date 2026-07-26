@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cashier-login',
-  templateUrl: './cashier-login.component.ts.html',
+  templateUrl: './cashier-login.component.html',
   styleUrls: ['./cashier-login.component.css']
 })
 export class CashierLoginComponent implements OnInit {
