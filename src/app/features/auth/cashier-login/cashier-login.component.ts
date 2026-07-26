@@ -32,6 +32,15 @@ export class CashierLoginComponent implements OnInit {
     }
   }
 
+    // 🚀 Add these two functions right below appendDigit block to fix the HTML buttons
+  handleNumberInput(digit: string): void {
+    this.appendDigit(digit);
+  }
+
+  handleClear(): void {
+    this.clearPin();
+  }
+
   private executePinValidation(): void {
     const payload = { pin: this.pinBuffer };
     
