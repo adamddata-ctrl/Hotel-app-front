@@ -34,30 +34,30 @@ export class WaiterSelectionComponent implements OnInit {
     this.fetchActiveWaiters();
   }
 
-  fetchActiveWaiters(): void {
-    const tenantId = localStorage.getItem('X-Tenant-ID');
+ fetchActiveWaiters(): void {
+  // Pull a fresh read from the browser storage disk right now
+  const tenantId = localStorage.getItem('X-Tenant-ID');
 
-    // If the tenant token is missing, do not send a broken request to production
-    if (!tenantId || tenantId === 'DEFAULT_TENANT_DEV') {
-      console.warn('🕒 WaiterSelectionComponent: Tenant ID context settling... Stalling network pipeline 150ms.');
-      setTimeout(() => this.fetchActiveWaiters(), 150);
-      return;
-    }
-
-    // Executes safely once the real token presence is confirmed in memory
-    this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
-      .subscribe({
-        next: (data) => {
-          this.waitersList = data;
-          this.errorMessage = ''; // Clear out past error messages
-        },
-        error: (err) => {
-          console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
-          this.errorMessage = 'Failed to load restaurant waiters. Please refresh the browser session.';
-        }
-      });
+  // If the token isn't fully written yet, check again in 150ms
+  if (!tenantId || tenantId === 'DEFAULT_TENANT_DEV') {
+    console.warn('🕒 Tenant context settling... Stalling network pipeline 150ms.');
+    setTimeout(() => this.fetchActiveWaiters(), 150);
+    return;
   }
 
+  // Executes safely ONLY when a valid token is found and verified
+  this.http.get<Waiter[]>(`${environment.apiUrl}/waiters/active`)
+    .subscribe({
+      next: (data) => {
+        this.waitersList = data;
+        this.errorMessage = ''; 
+      },
+      error: (err) => {
+        console.error('FAILED TO FETCH RESTAURANT WAITERS:', err);
+        this.errorMessage = 'Failed to load restaurant waiters. Please refresh.';
+      }
+    });
+}
   selectWaiter(waiter: Waiter): void {
     localStorage.setItem('selected_waiter_id', waiter.id.toString());
     localStorage.setItem('selected_waiter_name', waiter.waiterName);
