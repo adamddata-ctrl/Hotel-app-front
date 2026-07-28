@@ -17,13 +17,13 @@ import { MenuManagementComponent } from './features/owner-dashboard/menu-managem
 import { KitchenScreenComponent } from './features/kitchen-screen/kitchen-screen.component';
 import { InventoryManagementComponent } from './features/owner-dashboard/inventory-management/inventory-management.component';
 
-// High-Security Dynamic Multi-Tenant Access Control Guards
+// High-Security Dynamic Multi-Tenant Access Control Guards & Resolvers
 import { authGuard } from './core/guards/auth.guards';
 import { tenantGuard } from './core/guards/tenant.guard';
 import { WorkspaceResolver } from './core/guards/workspace.resolver';
 
 const routes: Routes = [
-  // 1. Core Authentication Entry Pathways (Duplicates completely purged)
+  // 1. Core Authentication Entry Pathways
   {
     path: 'login',
     component: CashierLoginComponent
@@ -35,22 +35,24 @@ const routes: Routes = [
 
   // 2. Front-Counter POS Register Workstations
   {
-     path: 'register/waiters/:tenantId',
+    path: 'register/waiters/:tenantId',
     component: WaiterSelectionComponent,
     canActivate: [tenantGuard, authGuard],
-   
+    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
   },
   {
     path: 'register/terminal',
     component: OrderTerminalComponent,
-    canActivate: [tenantGuard, authGuard]
+    canActivate: [tenantGuard, authGuard],
+    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
   },
 
-  // 3. Back-Office Franchise Management Panels (All original components preserved)
+  // 3. Owner Back-Office Corporate Management Panels
   {
     path: 'owner-dashboard',
     component: DashboardHomeComponent,
     canActivate: [tenantGuard, authGuard],
+    resolve: { tenantContext: WorkspaceResolver }, // ⚡ Resolves and locks multi-tenant storage before boot
     children: [
       { path: 'summary-metrics', component: SummaryMetricsComponent },
       { path: 'sales-chart', component: SalesChartComponent },
@@ -62,13 +64,14 @@ const routes: Routes = [
   {
     path: 'dashboard/sales-charts',
     component: SalesChartComponent,
-    canActivate: [tenantGuard, authGuard]
+    canActivate: [tenantGuard, authGuard],
+    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
   },
 
-  // 4. Default System Fallbacks and Wildcards (Standardized to standard '**')
+  // 4. Default System Fallbacks and Wildcards
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'login', // ✅ Fixed 'redirectIo' compiler typo to valid 'redirectTo'
     pathMatch: 'full'
   },
   {
