@@ -15,8 +15,8 @@ export class CashierLoginComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    const currentWorkspace = localStorage.getItem('X-Tenant-ID');
-    console.log('Active SaaS Workspace Session:', currentWorkspace || 'DEFAULT_TENANT_DEV');
+    const currentworkspace = localStorage.getItem('X-Tenant-ID');
+    console.log('Active SaaS workspace Session: ', currentworkspace || 'DEFAULT_TENANT_DEV');
   }
 
   clearPin(): void {
@@ -32,7 +32,7 @@ export class CashierLoginComponent implements OnInit {
     }
   }
 
-    // 🚀 Add these two functions right below appendDigit block to fix the HTML buttons
+  // HTML keypad bridge functions
   handleNumberInput(digit: string): void {
     this.appendDigit(digit);
   }
@@ -43,13 +43,13 @@ export class CashierLoginComponent implements OnInit {
 
   private executePinValidation(): void {
     const payload = { pin: this.pinBuffer };
-    
+
     this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
       .subscribe({
         next: (response) => {
-          // 🚀 STEP 1 DIAGNOSTIC TRACKER: See the exact backend property names across the network pipeline
-          console.log('📡 SERVER LOGIN RAW RESPONSE:', response);
-          
+          // STEP 1 DIAGNOSTIC TRACKER: See the exact backend property names across the network pipeline
+          console.log('SERVER LOGIN RAW RESPONSE: ', response);
+
           if (response && response.success && response.tenantId) {
             localStorage.setItem('X-Tenant-ID', response.tenantId);
             localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
@@ -57,10 +57,14 @@ export class CashierLoginComponent implements OnInit {
 
             if (response.role === 'OWNER' || response.role === 'MANAGER') {
               console.log('Access authorized for Owner dashboard workspace portal layout channel.');
-              this.router.navigate(['/owner-dashboard/summary-metrics'], { state: { tenantId: response.tenantId } });
+              this.router.navigate(['/owner-dashboard/summary-metrics'], { 
+                state: { tenantId: response.tenantId } 
+              });
             } else {
               console.log('Access authorized for Cashier Front Counter terminal register layouts.');
-              this.router.navigate(['/register/waiters'], { state: { tenantId: response.tenantId } });
+              this.router.navigate(['/register/waiters'], { 
+                state: { tenantId: response.tenantId } 
+              });
             }
           } else {
             console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');

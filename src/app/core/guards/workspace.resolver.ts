@@ -10,7 +10,7 @@ export class WorkspaceResolver implements Resolve<any> {
   constructor(private router: Router) {}
 
   resolve(): Observable<any> {
-    // 1. Check instant Router state memory channel
+    // 1. Check Instant Router state memory channel
     const currentNavigation = this.router.getCurrentNavigation();
     const stateToken = currentNavigation?.extras.state?.['tenantId'];
 
@@ -26,20 +26,20 @@ export class WorkspaceResolver implements Resolve<any> {
     }
 
     // 3. GLOBAL SAFETY RETRY BUFFER: If storage is settling during a full reload, wait 150ms and check one final time
-    console.warn('🕒 GLOBAL RESOLVER: Storage settling detected on page boot. Intended async retry queue activated.');
-    
+    console.warn('⚠️ GLOBAL RESOLVER: Storage settling detected on page boot. Intended async retry queue activated.');
+
     return timer(150).pipe(
       switchMap(() => {
         const secondaryToken = localStorage.getItem('X-Tenant-ID');
-        
+
         if (secondaryToken && secondaryToken.trim() !== '' && secondaryToken !== 'DEFAULT_TENANT_DEV') {
-          console.log(`🌍 GLOBAL RESOLVER: Context secured after async retry loop: [${secondaryToken}]`);
+          console.log(`✅ GLOBAL RESOLVER: Context secured after async retry loop: [${secondaryToken}]`);
           return of(secondaryToken);
         }
 
         // 4. Absolute structural lockout only if it remains completely empty after the wait period
         console.error('❌ GLOBAL RESOLVER: Missing multi-tenant token context. Canceling route initialization.');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/cashier-login']); // Navigates to your explicit cashier terminal screen
         return of(null);
       }),
       take(1)
