@@ -4,16 +4,18 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { TenantRegistrationDto } from '../tenant-registration.model'; // Cleanly imports your updated model file!
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // FIX: Converted to true backticks (`) to properly compute your cloud address variable string
-  private baseAuthUrl = `${environment.apiUrl}/auth`;
+  // ✅ FIX: Converted to true backticks (`) and appended /api to cleanly map your cloud backend address mapping
+  private baseAuthUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(private http: HttpClient) {}
 
   registerNewTenant(registrationData: TenantRegistrationDto): Observable<any> {
+    // ✅ FIX: Uses the unified base URL variable to prevent 404 endpoint routing breaks
     return this.http.post<any>(`${this.baseAuthUrl}/register-tenant`, registrationData).pipe(
       tap(response => {
         if (response && response.tenantId) {
@@ -25,19 +27,18 @@ export class AuthService {
     );
   }
 
-// Inside src/app/core/services/auth.service.ts below registerNewTenant
-loginCashier(pin: string): Observable<any> {
-  return this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, { pin }).pipe(
-    tap(response => {
-      if (response && response.tenantId) {
-        // Enforce immediate, synchronous local storage commitment
-        localStorage.setItem('X-Tenant-ID', response.tenantId);
-        localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
-        localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
-        console.log('🔒 AUTH SERVICE: Core tenant context locked and synced:', response.tenantId);
-      }
-    })
-  );
-}
-
+  loginCashier(pin: string): Observable<any> {
+    // ✅ FIX: Synchronized path structure using matching clean backtick syntax rules
+    return this.http.post<any>(`${this.baseAuthUrl}/cashier-login`, { pin }).pipe(
+      tap(response => {
+        if (response && response.tenantId) {
+          // Enforce immediate, synchronous local storage commitment
+          localStorage.setItem('X-Tenant-ID', response.tenantId);
+          localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
+          localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
+          console.log('AUTH SERVICE: Core tenant context locked and synced:', response.tenantId);
+        }
+      })
+    );
+  }
 }
