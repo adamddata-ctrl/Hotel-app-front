@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cashier-login',
@@ -10,19 +10,25 @@ import { environment } from 'src/environments/environment';
 })
 export class CashierLoginComponent implements OnInit {
   pinBuffer: string = '';
-  // 🌟 ADD THIS LINE RIGHT HERE TO FIX THE BUILD ERROR:
-  errorMessage: string | null = null; 
+  errorMessage: string = '';
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const currentworkspace = localStorage.getItem('X-Tenant-ID');
+    console.log('Active SaaS workspace Session: ', currentworkspace || 'DEFAULT_TENANT_DEV');
+  }
+
+  clearPin(): void {
+    this.pinBuffer = '';
+  }
 
   appendDigit(digit: string): void {
-    // Clear any existing error message when they start typing a new PIN
-    this.errorMessage = null; 
-    
     if (this.pinBuffer.length < 4) {
       this.pinBuffer += digit;
+      if (this.pinBuffer.length === 4) {
+        this.executePinValidation();
+      }
     }
   }
 
@@ -32,40 +38,48 @@ export class CashierLoginComponent implements OnInit {
   }
 
   handleClear(): void {
-    this.pinBuffer = '';
-    this.errorMessage = null;
+    this.clearPin();
   }
 
   private executePinValidation(): void {
-    const payload = { pinCode: this.pinBuffer };
+    const payload = { pin: this.pinBuffer };
 
-    this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
+    this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
       .subscribe({
         next: (response) => {
+          // STEP 1 DIAGNOSTIC TRACKER: See the exact backend property names across the network pipeline
           console.log('SERVER LOGIN RAW RESPONSE: ', response);
 
-          if (response && response.status === 'SUCCESS') {
-            localStorage.setItem('X-Tenant-ID', localStorage.getItem('X-Tenant-ID') || 'DEFAULT_TENANT_DEV');
-            localStorage.setItem('cashier_id', '1');
-            localStorage.setItem('cashier_name', response.username || 'Terminal Staff');
+          if (response && response.success && response.tenantId) {
+            localStorage.setItem('X-Tenant-ID', response.tenantId);
+            localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
+            localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
 
             if (response.role === 'OWNER' || response.role === 'MANAGER') {
               console.log('Access authorized for Owner dashboard workspace portal layout channel.');
-              this.router.navigate(['/owner-dashboard/summary-metrics'], {
-                state: { tenantId: localStorage.getItem('X-Tenant-ID') }
+              this.router.navigate(['/owner-dashboard/summary-metrics'], { 
+                state: { tenantId: response.tenantId } 
               });
             } else {
-              this.router.navigate(['/waiter-selection']);
+              console.log('Access authorized for Cashier Front Counter terminal register layouts.');
+              this.router.navigate(['/register/waiters'], { 
+                state: { tenantId: response.tenantId } 
+              });
             }
+          } else {
+            console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
+            this.handleAuthFailure();
           }
         },
         error: (err) => {
-          console.error('Authentication request cycle aborted by network processor:', err);
-          
-          // 🌟 THIS SETS THE ERROR PANEL IN YOUR HTML SO THE CASHIER SEES IT:
-          this.errorMessage = 'Login Failed: Invalid PIN code or network error.';
-          this.handleClear();
+          console.error('AUTH SYSTEM: Network pipe credential evaluation rejected.', err);
+          this.handleAuthFailure();
         }
       });
+  }
+
+  private handleAuthFailure(): void {
+    this.errorMessage = 'Invalid Cashier Security PIN. Please retry.';
+    this.pinBuffer = '';
   }
 }
