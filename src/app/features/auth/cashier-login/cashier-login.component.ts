@@ -10,12 +10,17 @@ import { environment } from 'src/environments/environment';
 })
 export class CashierLoginComponent implements OnInit {
   pinBuffer: string = '';
+  // 🌟 ADD THIS LINE RIGHT HERE TO FIX THE BUILD ERROR:
+  errorMessage: string | null = null; 
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {}
 
   appendDigit(digit: string): void {
+    // Clear any existing error message when they start typing a new PIN
+    this.errorMessage = null; 
+    
     if (this.pinBuffer.length < 4) {
       this.pinBuffer += digit;
     }
@@ -28,6 +33,7 @@ export class CashierLoginComponent implements OnInit {
 
   handleClear(): void {
     this.pinBuffer = '';
+    this.errorMessage = null;
   }
 
   private executePinValidation(): void {
@@ -36,7 +42,6 @@ export class CashierLoginComponent implements OnInit {
     this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
       .subscribe({
         next: (response) => {
-          // STEP 1 DIAGNOSTIC TRACKER: See the exact backend property names across the network pipeline
           console.log('SERVER LOGIN RAW RESPONSE: ', response);
 
           if (response && response.status === 'SUCCESS') {
@@ -50,14 +55,15 @@ export class CashierLoginComponent implements OnInit {
                 state: { tenantId: localStorage.getItem('X-Tenant-ID') }
               });
             } else {
-              // Standard cashier or waiter routing path entry step
               this.router.navigate(['/waiter-selection']);
             }
           }
         },
         error: (err) => {
           console.error('Authentication request cycle aborted by network processor:', err);
-          alert('Login Failed: Invalid credentials or structural network channel error.');
+          
+          // 🌟 THIS SETS THE ERROR PANEL IN YOUR HTML SO THE CASHIER SEES IT:
+          this.errorMessage = 'Login Failed: Invalid PIN code or network error.';
           this.handleClear();
         }
       });
