@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-cashier-login',
@@ -10,25 +10,14 @@ import { environment } from '../../../../environments/environment';
 })
 export class CashierLoginComponent implements OnInit {
   pinBuffer: string = '';
-  errorMessage: string = '';
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  ngOnInit(): void {
-    const currentworkspace = localStorage.getItem('X-Tenant-ID');
-    console.log('Active SaaS workspace Session: ', currentworkspace || 'DEFAULT_TENANT_DEV');
-  }
-
-  clearPin(): void {
-    this.pinBuffer = '';
-  }
+  ngOnInit(): void {}
 
   appendDigit(digit: string): void {
     if (this.pinBuffer.length < 4) {
       this.pinBuffer += digit;
-      if (this.pinBuffer.length === 4) {
-        this.executePinValidation();
-      }
     }
   }
 
@@ -38,48 +27,39 @@ export class CashierLoginComponent implements OnInit {
   }
 
   handleClear(): void {
-    this.clearPin();
+    this.pinBuffer = '';
   }
 
   private executePinValidation(): void {
-    const payload = { pin: this.pinBuffer };
+    const payload = { pinCode: this.pinBuffer };
 
-    this.http.post<any>(`${environment.apiUrl}/auth/cashier-login`, payload)
+    this.http.post<any>(`${environment.apiUrl}/api/auth/cashier-login`, payload)
       .subscribe({
         next: (response) => {
           // STEP 1 DIAGNOSTIC TRACKER: See the exact backend property names across the network pipeline
           console.log('SERVER LOGIN RAW RESPONSE: ', response);
 
-          if (response && response.success && response.tenantId) {
-            localStorage.setItem('X-Tenant-ID', response.tenantId);
-            localStorage.setItem('cashier_id', response.cashierId?.toString() || '1');
-            localStorage.setItem('cashier_name', response.cashierName || 'Terminal Staff');
+          if (response && response.status === 'SUCCESS') {
+            localStorage.setItem('X-Tenant-ID', localStorage.getItem('X-Tenant-ID') || 'DEFAULT_TENANT_DEV');
+            localStorage.setItem('cashier_id', '1');
+            localStorage.setItem('cashier_name', response.username || 'Terminal Staff');
 
             if (response.role === 'OWNER' || response.role === 'MANAGER') {
               console.log('Access authorized for Owner dashboard workspace portal layout channel.');
-              this.router.navigate(['/owner-dashboard/summary-metrics'], { 
-                state: { tenantId: response.tenantId } 
+              this.router.navigate(['/owner-dashboard/summary-metrics'], {
+                state: { tenantId: localStorage.getItem('X-Tenant-ID') }
               });
             } else {
-              console.log('Access authorized for Cashier Front Counter terminal register layouts.');
-              this.router.navigate(['/register/waiters'], { 
-                state: { tenantId: response.tenantId } 
-              });
+              // Standard cashier or waiter routing path entry step
+              this.router.navigate(['/waiter-selection']);
             }
-          } else {
-            console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
-            this.handleAuthFailure();
           }
         },
         error: (err) => {
-          console.error('AUTH SYSTEM: Network pipe credential evaluation rejected.', err);
-          this.handleAuthFailure();
+          console.error('Authentication request cycle aborted by network processor:', err);
+          alert('Login Failed: Invalid credentials or structural network channel error.');
+          this.handleClear();
         }
       });
-  }
-
-  private handleAuthFailure(): void {
-    this.errorMessage = 'Invalid Cashier Security PIN. Please retry.';
-    this.pinBuffer = '';
   }
 }
