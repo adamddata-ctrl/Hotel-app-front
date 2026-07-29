@@ -46,10 +46,18 @@ export class TenantSignupComponent {
 
   this.authService.registerNewTenant(this.signupData).subscribe({
     next: (response) => {
-      this.isSubmitting = false;
-      alert(`SUCCESS! Independent Workspace Created.\n\nYour Unique Tenant ID is: ${response.tenantId}`);
-      this.router.navigate(['/login']);
+        this.isSubmitting = false;
+        
+        // Save the brand new workspace tenant ID safely
+        if (response && response.tenantId) {
+            localStorage.setItem('X-Tenant-ID', response.tenantId);
+        }
+        
+        alert(`SUCCESS! Independent Workspace Created.\n\nYour Unique Tenant ID is: ${response.tenantId}`);
+        this.router.navigate(['/auth/cashier-login']);
     },
+   
+   
     error: (err) => {
       this.isSubmitting = false;
       console.error('Workspace registration pipeline failed:', err);

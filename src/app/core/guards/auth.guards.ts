@@ -6,7 +6,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const targetUrl = state.url.toLowerCase();
 
   // 1. PERMANENT BYPASS: If navigating to tenant signup or login, let the request pass immediately
-  if (targetUrl.includes('register-tenant') || targetUrl.includes('login')) {
+if (targetUrl.includes('register-tenant') || targetUrl.includes('cashier-login') || targetUrl.includes('login')) {
     return true;
   }
 

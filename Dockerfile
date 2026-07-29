@@ -20,7 +20,7 @@ RUN npx ng build --configuration=production
 FROM nginx:alpine
 
 # ✅ THE CRITICAL FIX: Copies your production files directly from your configured build directory layout
-COPY --from=build /app/dist/hotel-pos-frontend /usr/share/nginx/html
+COPY --from=build /app/dist/hotel-pos-frontend/browser /usr/share/nginx/html
 
 # Link your custom internal SPA routing rules
 COPY nginx.conf /etc/nginx/conf.d/default.conf
