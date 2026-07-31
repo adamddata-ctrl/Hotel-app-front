@@ -12,6 +12,7 @@ export const tenantGuard: CanActivateFn = (route, state) => {
 
   // Security Override: Force them back to the entrance login point if missing or corrupt
   console.warn('⚠️ SECURITY FIREWALL: Access denied. Multi-tenant workspace token missing or invalid.');
-  router.navigate(['/auth/cashier-login']);
+  // 🔥 UPDATED: Route matches the 'login' path in AppRoutingModule
+  router.navigate(['/login']);
   return false;
 };

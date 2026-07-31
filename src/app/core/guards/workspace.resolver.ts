@@ -39,7 +39,9 @@ export class WorkspaceResolver implements Resolve<any> {
 
         // 4. Absolute structural lockout only if it remains completely empty after the wait period
         console.error('❌ GLOBAL RESOLVER: Missing multi-tenant token context. Canceling route initialization.');
-        this.router.navigate(['/auth/cashier-login']); // Navigates to your explicit cashier terminal screen
+        
+        // 🔥 FIXED: Route matched to 'login' in AppRoutingModule
+        this.router.navigate(['/login']); 
         return of(null);
       }),
       take(1)
