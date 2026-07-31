@@ -60,7 +60,7 @@ export class CashierLoginComponent implements OnInit {
               this.router.navigate(['/owner-dashboard/summary-metrics'], { 
                 state: { tenantId: response.tenantId } 
               });
-            } else {
+            }  else {
               console.log('Access authorized for Cashier Front Counter terminal register layouts.');
              this.router.navigate(['/register/waiters', response.tenantId]);
             }
