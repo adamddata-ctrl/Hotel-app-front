@@ -9,13 +9,15 @@
     <button class="sync-matrix-btn" (click)="refreshWarehouseMatrix()">
       🔄 RE-SYNC LIVE CATALOGS
     </button>
-  
- <!-- 🔥 ADDED: Click action to spawn the supply registration window [3.1] -->
-      <button class="sync-matrix-btn" (click)="openCreateModal()" style="border-color: #a6e3a1; color: #a6e3a1; margin-left: 10px;">
-        ➕ ADD NEW SUPPLIES
-      </button>
+    <button class="sync-matrix-btn" (click)="openCreateModal()" style="border-color: #a6e3a1; color: #a6e3a1; margin-left: 10px;">
+      ➕ ADD NEW SUPPLIES
+    </button>
 
-</div>
+    <!-- 🔥 NEW BUTTON: Takes you directly to the Menu Management page -->
+    <button class="sync-matrix-btn" routerLink="/owner-dashboard/menu-management" style="border-color: #89b4fa; color: #89b4fa; margin-left: 10px;">
+      📝 MANAGE MENU
+    </button>
+  </div>
   
 
   <div class="error-banner" *ngIf="errorMessage">⚠️ {{ errorMessage }}</div>
@@ -23,7 +25,7 @@
   <!-- Shimmer Load Feedback -->
   <div class="loading-state" *ngIf="isLoading && stockItems.length === 0">
     Processing central store registries... Please hold.
-     </div>
+  </div>
 
   <!-- 📦 Master Stock Inventory Spreadsheet Matrix Grid -->
   <div class="spreadsheet-list-card" *ngIf="!isLoading || stockItems.length > 0">
@@ -59,7 +61,7 @@
           <td class="text-right text-gray font-medium">
             {{ item.minStockLevel | number:'1.2-2' }}
           </td>
-           <!-- Interactive Action Block Options Columns [3.1] -->
+          <!-- Interactive Action Block Options Columns [3.1] -->
           <td class="text-center actions-cell">
             <button class="opt-btn btn-receive" (click)="openAdjustmentModal(item, 'RECEIVE')">📥 RECEIVE PO</button>
             <button class="opt-btn btn-adjust" (click)="openAdjustmentModal(item, 'ADJUST')">🔧 ADJUST STOCK</button>
@@ -75,7 +77,7 @@
     <div class="action-modal-card">
       <div class="modal-title-row">
         <h3>
-             <span *ngIf="activeActionType === 'RECEIVE'">📥 RECEIVE SUPPLIER PURCHASE ORDER</span>
+          <span *ngIf="activeActionType === 'RECEIVE'">📥 RECEIVE SUPPLIER PURCHASE ORDER</span>
           <span *ngIf="activeActionType === 'ADJUST'">🔧 LOG MANUAL STOCK ADJUSTMENT</span>
           <span *ngIf="activeActionType === 'COUNT'">📝 EXECUTE PHYSICAL STOCKTAKE COUNT</span>
         </h3>
@@ -92,7 +94,7 @@
           <input type="number" [(ngModel)]="inputValueModifier" placeholder="0.00" step="0.01" />
         </div>
       </div>
-        <div class="modal-footer-row">
+      <div class="modal-footer-row">
         <button class="modal-btn-cancel" (click)="closeModal()">CANCEL</button>
         <button class="modal-btn-commit" (click)="commitInventoryAction()">COMMIT CHANGES</button>
       </div>
@@ -139,7 +141,7 @@
             <label>Min Warning Level:</label>
             <input type="number" [(ngModel)]="newItemForm.minStockLevel" step="0.01" />
           </div>
-           </div>
+        </div>
       </div>
 
       <div class="modal-footer-row">
@@ -148,4 +150,3 @@
       </div>
     </div>
   </div>
-  
