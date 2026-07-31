@@ -38,13 +38,13 @@ const routes: Routes = [
     path: 'register/waiters/:tenantId',
     component: WaiterSelectionComponent,
     canActivate: [tenantGuard, authGuard],
-    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
+    resolve: { tenantContext: WorkspaceResolver }
   },
   {
     path: 'register/terminal',
     component: OrderTerminalComponent,
     canActivate: [tenantGuard, authGuard],
-    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
+    resolve: { tenantContext: WorkspaceResolver }
   },
 
   // 3. Owner Back-Office Corporate Management Panels
@@ -52,8 +52,11 @@ const routes: Routes = [
     path: 'owner-dashboard',
     component: DashboardHomeComponent,
     canActivate: [tenantGuard, authGuard],
-    resolve: { tenantContext: WorkspaceResolver }, // ⚡ Resolves and locks multi-tenant storage before boot
+    resolve: { tenantContext: WorkspaceResolver },
     children: [
+      // 🔥 NEW ADDITION: Automatically loads summary-metrics when you hit /owner-dashboard
+      { path: '', redirectTo: 'summary-metrics', pathMatch: 'full' },
+      
       { path: 'summary-metrics', component: SummaryMetricsComponent },
       { path: 'sales-chart', component: SalesChartComponent },
       { path: 'menu-management', component: MenuManagementComponent },
@@ -61,17 +64,19 @@ const routes: Routes = [
       { path: 'inventory-management', component: InventoryManagementComponent }
     ]
   },
+  // 🔥 OPTIONAL CLEANUP: You can delete this standalone route later. 
+  // Your HTML buttons should point to '/owner-dashboard/sales-chart' instead.
   {
     path: 'dashboard/sales-charts',
     component: SalesChartComponent,
     canActivate: [tenantGuard, authGuard],
-    resolve: { tenantContext: WorkspaceResolver } // ⚡ Resolves and locks multi-tenant storage before boot
+    resolve: { tenantContext: WorkspaceResolver }
   },
 
   // 4. Default System Fallbacks and Wildcards
   {
     path: '',
-    redirectTo: 'login', // ✅ Fixed 'redirectIo' compiler typo to valid 'redirectTo'
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
