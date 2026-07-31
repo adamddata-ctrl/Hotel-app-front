@@ -10,7 +10,7 @@ import { TenantRegistrationDto } from '../tenant-registration.model'; // Cleanly
 })
 export class AuthService {
   // ✅ FIX: Converted to true backticks (`) and appended /api to cleanly map your cloud backend address mapping
-  private baseAuthUrl = `${environment.apiUrl}/api/auth`;
+  private baseAuthUrl = `${environment.apiUrl}/auth`;
   //private baseAuthUrl = 'https://onrender.com';
 
   constructor(private http: HttpClient) {}
