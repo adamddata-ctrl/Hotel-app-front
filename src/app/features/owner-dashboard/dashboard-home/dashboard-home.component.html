@@ -58,6 +58,9 @@
   <!-- 📊 Primary Subcomponent Data Matrix Grid Presentation Stream Workspace Container -->
   <div class="dashboard-scrollable-workspace">
     
+    <!-- 🔥 CRITICAL ADDITION: This placeholder tells Angular where to load child routes like inventory-management! -->
+    <router-outlet></router-outlet>
+    
     <!-- 1. Mount High-Level Financial KPI Snapshot Cards Widget (SummaryMetrics) -->
     <app-summary-metrics [totalRevenue]="grossRevenue"></app-summary-metrics>
 
