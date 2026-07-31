@@ -62,9 +62,7 @@ export class CashierLoginComponent implements OnInit {
               });
             } else {
               console.log('Access authorized for Cashier Front Counter terminal register layouts.');
-              this.router.navigate(['/register/waiters'], { 
-                state: { tenantId: response.tenantId } 
-              });
+             this.router.navigate(['/register/waiters', response.tenantId]);
             }
           } else {
             console.error('CRITICAL: Server returned success status but omitted the multi-tenant identifier!');
