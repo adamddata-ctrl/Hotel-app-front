@@ -24,7 +24,8 @@ export class InventoryManagementComponent implements OnInit {
     itemName: '',
     quantityOnHand: 0,
     minStockLevel: 0,
-    unitOfMeasure: 'pcs'
+    unitOfMeasure: 'pcs',
+    category: 'FOOD' // 🔥 FIXED: Added required field to match backend entity!
   };
 
   constructor(private inventoryService: InventoryManagementService) {}
@@ -113,7 +114,14 @@ export class InventoryManagementComponent implements OnInit {
    */
   public openCreateModal(): void {
     this.isCreateModalOpen = true;
-    this.newItemForm = { itemName: '', quantityOnHand: 0, minStockLevel: 0, unitOfMeasure: 'pcs' };
+    // 🔥 FIXED: Include 'category' when resetting the form
+    this.newItemForm = { 
+      itemName: '', 
+      quantityOnHand: 0, 
+      minStockLevel: 0, 
+      unitOfMeasure: 'pcs',
+      category: 'FOOD' 
+    };
   }
 
   public closeCreateModal(): void {
