@@ -41,6 +41,7 @@ export class CashierLoginComponent implements OnInit {
     this.clearPin();
   }
 
+  
   private executePinValidation(): void {
     const payload = { pin: this.pinBuffer };
 
