@@ -30,7 +30,7 @@ export class InventoryManagementComponent implements OnInit {
     linkedMenuIds: [] as number[] 
   };
 
-  // 🔥 NEW ADDITION: Configuration settings for the mobile-friendly multi-select dropdown
+  // 🔥 CRITICAL SETTINGS: The dropdown library needs this to map the IDs and Names!
   public dropdownSettings = {
     singleSelection: false,
     idField: 'id',
