@@ -21,7 +21,6 @@ export class InventoryManagementComponent implements OnInit {
 
   public isCreateModalOpen: boolean = false;
   
-  // 🔥 CRITICAL CHANGE: Changed 'menuItemId: null' to an array 'linkedMenuIds: []'
   public newItemForm = {
     itemName: '',
     quantityOnHand: 0,
@@ -29,6 +28,17 @@ export class InventoryManagementComponent implements OnInit {
     unitOfMeasure: 'pcs',
     category: 'FOOD',
     linkedMenuIds: [] as number[] 
+  };
+
+  // 🔥 NEW ADDITION: Configuration settings for the mobile-friendly multi-select dropdown
+  public dropdownSettings = {
+    singleSelection: false,
+    idField: 'id',
+    textField: 'itemName',
+    selectAllText: 'Select All',
+    unSelectAllText: 'UnSelect All',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
   };
 
   constructor(
@@ -116,7 +126,6 @@ export class InventoryManagementComponent implements OnInit {
 
   public openCreateModal(): void {
     this.isCreateModalOpen = true;
-    // 🔥 RESET: Ensure it resets to an empty array
     this.newItemForm = { 
       itemName: '', 
       quantityOnHand: 0, 

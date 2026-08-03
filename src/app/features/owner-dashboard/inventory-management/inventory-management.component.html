@@ -1,3 +1,4 @@
+
 <div class="warehouse-widget-container">
   
   <!-- 📊 Top Action Branding Panel -->
@@ -143,13 +144,17 @@
           </div>
         </div>
 
-        <!-- 🔥 NEW MULTI-SELECT DROPDOWN: Hold Ctrl/Cmd to select multiple items -->
+        <!-- 🔥 NEW MOBILE-FRIENDLY MULTI-SELECT DROPDOWN -->
         <div class="modal-input-group" style="margin-bottom: 14px;">
-          <label>Link to Menu Items (Hold Ctrl/Cmd to select multiple):</label>
-          <select [(ngModel)]="newItemForm.linkedMenuIds" multiple style="width: 100%; height: 80px; background-color: #11111b; border: 1px solid #313244; border-radius: 8px; padding: 10px; color: #cdd6f4; font-size: 14px;">
-            <option *ngFor="let item of menuItems" [ngValue]="item.id">{{ item.itemName }}</option>
-          </select>
-          <p style="font-size: 11px; color: #6c7086; margin-top: 4px;">Select all menu items that use this ingredient.</p>
+          <label>Link to Menu Items (Select multiple):</label>
+          <ng-multiselect-dropdown
+            [placeholder]="'Select menu items'"
+            [data]="menuItems"
+            [(ngModel)]="newItemForm.linkedMenuIds"
+            [settings]="dropdownSettings"
+            [disabled]="false">
+          </ng-multiselect-dropdown>
+          <p style="font-size: 11px; color: #6c7086; margin-top: 4px;">Tap to select all menu items that use this ingredient.</p>
         </div>
 
       </div>

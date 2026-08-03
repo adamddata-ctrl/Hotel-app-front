@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Injects HTTP utilities
 import { FormsModule } from '@angular/forms';
@@ -38,7 +39,7 @@ import { TenantSignupComponent } from './features/auth/tenant-signup/tenant-sign
     BrowserModule,
     AppRoutingModule,
     HttpClientModule, 
-     FormsModule  // Added for backend REST API calls
+     FormsModule , NgMultiSelectDropDownModule // Added for backend REST API calls
   ],
    providers: [
    
