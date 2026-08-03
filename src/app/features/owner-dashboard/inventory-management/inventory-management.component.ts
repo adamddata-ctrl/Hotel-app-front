@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // 🔥 ADDED: Needed to fetch the menu list!
-import { environment } from '../../../../environments/environment'; // 🔥 ADDED: Needed for the API URL!
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 import { InventoryManagementService, InventoryItem } from '../../../core/services/inventory-management.service';
 
 @Component({
@@ -10,28 +10,27 @@ import { InventoryManagementService, InventoryItem } from '../../../core/service
 })
 export class InventoryManagementComponent implements OnInit {
   public stockItems: InventoryItem[] = [];
-  public menuItems: any[] = []; // 🔥 ADDED: To hold the list of burgers/drinks
+  public menuItems: any[] = []; 
   public errorMessage: string = '';
   public isLoading: boolean = false;
 
-  // State modifiers for interactive workspace action blocks [3.1]
   public selectedItem: InventoryItem | null = null;
   public activeActionType: 'ADJUST' | 'COUNT' | 'RECEIVE' | null = null;
   public inputValueModifier: number | null = null;
   public transactionNotes: string = '';
 
-  // Form state tracking parameters to create new supplies from the UI [3.1]
   public isCreateModalOpen: boolean = false;
+  
+  // 🔥 CRITICAL CHANGE: Changed 'menuItemId: null' to an array 'linkedMenuIds: []'
   public newItemForm = {
     itemName: '',
     quantityOnHand: 0,
     minStockLevel: 0,
     unitOfMeasure: 'pcs',
     category: 'FOOD',
-    menuItemId: null // 🔥 ADDED: To hold the selected menu item's ID
+    linkedMenuIds: [] as number[] 
   };
 
-  // 🔥 ADDED: Inject HttpClient to fetch the menu
   constructor(
     private inventoryService: InventoryManagementService,
     private http: HttpClient
@@ -39,12 +38,9 @@ export class InventoryManagementComponent implements OnInit {
 
   public ngOnInit(): void {
     this.refreshWarehouseMatrix();
-    this.fetchMenuItemsForInventory(); // 🔥 ADDED: Fetch menu items on load
+    this.fetchMenuItemsForInventory();
   }
 
-  /**
-   * Fetches the list of active menu items to populate the dropdown selector.
-   */
   fetchMenuItemsForInventory(): void {
     this.http.get<any[]>(`${environment.apiUrl}/menu-items/active`).subscribe({
       next: (data) => {
@@ -56,9 +52,6 @@ export class InventoryManagementComponent implements OnInit {
     });
   }
 
-  /**
-   * Downloads live raw stocks currently associated with the active tenant workspace [3.1].
-   */
   public refreshWarehouseMatrix(): void {
     this.isLoading = true;
     this.inventoryService.fetchAllStockBalances().subscribe({
@@ -74,9 +67,6 @@ export class InventoryManagementComponent implements OnInit {
     });
   }
 
-  /**
-   * Spawns an overlay sheet block layout to prepare stock mutations [3.1]
-   */
   public openAdjustmentModal(item: InventoryItem, type: 'ADJUST' | 'COUNT' | 'RECEIVE'): void {
     this.selectedItem = item;
     this.activeActionType = type;
@@ -84,9 +74,6 @@ export class InventoryManagementComponent implements OnInit {
     this.transactionNotes = '';
   }
 
-  /**
-   * Clears active modification state tracking parameters
-   */
   public closeModal(): void {
     this.selectedItem = null;
     this.activeActionType = null;
@@ -94,22 +81,18 @@ export class InventoryManagementComponent implements OnInit {
     this.transactionNotes = '';
   }
 
-  /**
-   * Commits the finalized action value modifications over your network service [3.1]
-   */
   public commitInventoryAction(): void {
     if (!this.selectedItem || this.inputValueModifier === null || this.inputValueModifier === undefined) {
       alert('Please fill out a valid quantitative adjustment number.');
       return;
     }
 
-    const itemId = this.selectedItem.id;
+    const itemId = this.selectedItem.id!;
     const value = this.inputValueModifier;
 
     this.isLoading = true;
     let requestStream$;
 
-    // Direct transaction routing depending on workspace operation types [3.1]
     if (this.activeActionType === 'ADJUST') {
       requestStream$ = this.inventoryService.submitStockAdjustment(itemId, value);
     } else if (this.activeActionType === 'COUNT') {
@@ -120,7 +103,7 @@ export class InventoryManagementComponent implements OnInit {
 
     requestStream$.subscribe({
       next: () => {
-        this.refreshWarehouseMatrix(); // Auto-refresh data row models smoothly upon checkout completion loop [3.1]
+        this.refreshWarehouseMatrix();
         this.closeModal();
       },
       error: (err) => {
@@ -131,19 +114,16 @@ export class InventoryManagementComponent implements OnInit {
     });
   }
 
-  /**
-   * Toggle controls for opening the supplier asset window [3.1]
-   */
   public openCreateModal(): void {
     this.isCreateModalOpen = true;
-    // 🔥 FIXED: Include 'category' and 'menuItemId' when resetting the form
+    // 🔥 RESET: Ensure it resets to an empty array
     this.newItemForm = { 
       itemName: '', 
       quantityOnHand: 0, 
       minStockLevel: 0, 
       unitOfMeasure: 'pcs',
       category: 'FOOD',
-      menuItemId: null
+      linkedMenuIds: [] 
     };
   }
 
@@ -151,11 +131,7 @@ export class InventoryManagementComponent implements OnInit {
     this.isCreateModalOpen = false;
   }
 
-  /**
-   * Dispatches a post command to store the brand-new ingredient record [3.1]
-   */
   public submitNewItem(): void {
-    // FIX: Tightened the string validation loop to check for clean trimmed lengths explicitly to block blank row creations
     if (!this.newItemForm.itemName || this.newItemForm.itemName.trim().length === 0) {
       alert('Please enter a valid item description name.');
       return;
@@ -164,7 +140,7 @@ export class InventoryManagementComponent implements OnInit {
     this.isLoading = true;
     this.inventoryService.createNewItem(this.newItemForm).subscribe({
       next: () => {
-        this.refreshWarehouseMatrix(); // Instantly reload table dataset on safe return [3.1]
+        this.refreshWarehouseMatrix();
         this.closeCreateModal();
       },
       error: (err) => {
