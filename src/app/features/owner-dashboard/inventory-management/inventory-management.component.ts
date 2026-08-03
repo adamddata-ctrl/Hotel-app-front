@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// FIX: Corrected your relative path climb directory index to step out of the nested dashboard folders safely
+import { HttpClient } from '@angular/common/http'; // 🔥 ADDED: Needed to fetch the menu list!
+import { environment } from '../../../../environments/environment'; // 🔥 ADDED: Needed for the API URL!
 import { InventoryManagementService, InventoryItem } from '../../../core/services/inventory-management.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { InventoryManagementService, InventoryItem } from '../../../core/service
 })
 export class InventoryManagementComponent implements OnInit {
   public stockItems: InventoryItem[] = [];
+  public menuItems: any[] = []; // 🔥 ADDED: To hold the list of burgers/drinks
   public errorMessage: string = '';
   public isLoading: boolean = false;
 
@@ -25,13 +27,33 @@ export class InventoryManagementComponent implements OnInit {
     quantityOnHand: 0,
     minStockLevel: 0,
     unitOfMeasure: 'pcs',
-    category: 'FOOD' // 🔥 FIXED: Added required field to match backend entity!
+    category: 'FOOD',
+    menuItemId: null // 🔥 ADDED: To hold the selected menu item's ID
   };
 
-  constructor(private inventoryService: InventoryManagementService) {}
+  // 🔥 ADDED: Inject HttpClient to fetch the menu
+  constructor(
+    private inventoryService: InventoryManagementService,
+    private http: HttpClient
+  ) {}
 
   public ngOnInit(): void {
     this.refreshWarehouseMatrix();
+    this.fetchMenuItemsForInventory(); // 🔥 ADDED: Fetch menu items on load
+  }
+
+  /**
+   * Fetches the list of active menu items to populate the dropdown selector.
+   */
+  fetchMenuItemsForInventory(): void {
+    this.http.get<any[]>(`${environment.apiUrl}/menu-items/active`).subscribe({
+      next: (data) => {
+        this.menuItems = data;
+      },
+      error: (err) => {
+        console.error('Failed to load menu items for inventory linking.', err);
+      }
+    });
   }
 
   /**
@@ -114,13 +136,14 @@ export class InventoryManagementComponent implements OnInit {
    */
   public openCreateModal(): void {
     this.isCreateModalOpen = true;
-    // 🔥 FIXED: Include 'category' when resetting the form
+    // 🔥 FIXED: Include 'category' and 'menuItemId' when resetting the form
     this.newItemForm = { 
       itemName: '', 
       quantityOnHand: 0, 
       minStockLevel: 0, 
       unitOfMeasure: 'pcs',
-      category: 'FOOD' 
+      category: 'FOOD',
+      menuItemId: null
     };
   }
 

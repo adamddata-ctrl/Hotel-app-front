@@ -142,6 +142,17 @@
             <input type="number" [(ngModel)]="newItemForm.minStockLevel" step="0.01" />
           </div>
         </div>
+
+        <!-- 🔥 NEW DROPDOWN: Select the menu item this inventory belongs to -->
+        <div class="modal-input-group" style="margin-bottom: 14px;">
+          <label>Link to Menu Item (Optional):</label>
+          <select [(ngModel)]="newItemForm.menuItemId" style="width: 100%; background-color: #11111b; border: 1px solid #313244; border-radius: 8px; padding: 10px; color: #cdd6f4; font-size: 14px;">
+            <option [ngValue]="null">None (Unlinked)</option>
+            <option *ngFor="let item of menuItems" [ngValue]="item.id">{{ item.itemName }}</option>
+          </select>
+          <p style="font-size: 11px; color: #6c7086; margin-top: 4px;">Select a menu item to automatically deduct stock when it is sold.</p>
+        </div>
+
       </div>
 
       <div class="modal-footer-row">
