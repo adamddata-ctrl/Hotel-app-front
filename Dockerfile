@@ -1,32 +1,26 @@
-# ==========================================
-# Stage 1: Build the Angular 16 application
-# ==========================================
+# Stage 1: Build the Angular app
 FROM node:18-alpine AS build
 WORKDIR /app
 
-# Copy dependency files and install dependencies
+# Force a clean install and cache-bust
 COPY package*.json ./
-RUN npm install
+RUN npm cache clean --force && npm install
 
-# Copy the rest of the application source code
+# Copy the source code
 COPY . .
 
-# Build for production (output: dist/hotel-pos-frontend)
-RUN npx ng build --configuration=production
+# 🔥 CACHE-BUSTER: This forces Angular to recompile every single time
+RUN echo "Force rebuild: $(date)" && npx ng build --configuration=production
 
-# ==========================================
-# Stage 2: Serve the application with Nginx
-# ==========================================
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy the built application from the previous stage
-COPY --from=build /app/dist/hotel-pos-frontend /usr/share/nginx/html
+# Remove any default files just in case
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy the custom Nginx configuration
+# Copy the new built app and new config
+COPY --from=build /app/dist/hotel-pos-frontend /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
 EXPOSE 80
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
